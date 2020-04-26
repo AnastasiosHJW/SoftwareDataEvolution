@@ -19,7 +19,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.tree.TreePath;
 
 import data.dataSorters.PldRowSorter;
 import gui.mainEngine.Gui;
@@ -30,6 +33,7 @@ import gui.tableElements.tableConstructors.TableConstructionClusterTablesPhasesZ
 import gui.tableElements.tableConstructors.TableConstructionZoomArea;
 import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
 import gui.tableElements.tableRenderers.IDUTableRenderer;
+import gui.treeElements.TreeConstructionPhasesWithClusters;
 
 public class GuiAuxilliary {
 	
@@ -668,7 +672,7 @@ public void makeGeneralTablePhases(final TableData tableData, final JTabbedPane 
 	});
 	
 	generalTable.addMouseListener(new MouseAdapter() {
-		private Component LifeTimeTable;
+
 
 		@Override
 		   public void mouseClicked(MouseEvent e) {
@@ -1459,5 +1463,7 @@ public void makeZoomAreaTableForCluster(final TableData tableData, final JTabbed
 	
 	
 }
+
+
 
 }

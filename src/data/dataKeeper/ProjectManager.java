@@ -37,7 +37,7 @@ public class ProjectManager {
 
 
 
-	public void importData(String fileName, TableManager tableManager, ClusterManager clusterManager, TableData tableData, GuiAuxilliary aux, JTabbedPane tabbedPane) throws IOException, RecognitionException {
+	public void importData(String fileName, TableManager tableManager, ClusterManager clusterManager, TreeManager treeManager, TableData tableData, GuiAuxilliary aux, JTabbedPane tabbedPane) throws IOException, RecognitionException {
 		
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		
@@ -92,8 +92,8 @@ public class ProjectManager {
         System.out.println(fileName);
         
         
-        tableManager.fillTable(clusterManager, tableData, tabbedPane, aux, inputCsv, outputAssessment1, outputAssessment2);
-        //fillTree();
+        tableManager.fillTable(clusterManager, treeManager, tableData, tabbedPane, aux, inputCsv, outputAssessment1, outputAssessment2);
+        treeManager.fillTree(tableManager);
 
 		currentProject=fileName;
 		

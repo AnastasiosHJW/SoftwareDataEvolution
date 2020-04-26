@@ -178,6 +178,7 @@ public class Gui extends JFrame implements ActionListener{
 	private ProjectManager projectManager;
 	private TableManager tableManager;
 	private ClusterManager clusterManager;
+	private TreeManager treeManager;
 	
 	private TableData tableData;
 
@@ -259,6 +260,8 @@ public class Gui extends JFrame implements ActionListener{
 		
 		JMenuItem mntmLoadProject = new JMenuItem("Load Project");
 		mntmLoadProject.addActionListener(new ActionListener() {
+
+
 			public void actionPerformed(ActionEvent arg0) {
 				
 				String fileName=null;
@@ -291,9 +294,11 @@ public class Gui extends JFrame implements ActionListener{
 							 outputAssessment2,  transitionsFile,  currentProject);
 					tableManager = new TableManager();
 					clusterManager = new ClusterManager();
+					treeManager = new TreeManager(treeLabel, tablesTree, sideMenu, tablesTreePanel,
+			 treeScrollPane, selectedFromTree,  LifeTimeTable);
 					tableData = new TableData();
 					aux.setManagers(tableManager,clusterManager);
-					projectManager.importData(fileName, tableManager, clusterManager, tableData ,aux, tabbedPane);
+					projectManager.importData(fileName, tableManager, clusterManager, treeManager, tableData ,aux, tabbedPane);
 					//*/
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(null, "Something seems wrong with this file");

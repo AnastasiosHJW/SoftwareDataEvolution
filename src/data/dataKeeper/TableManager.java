@@ -129,7 +129,7 @@ public class TableManager {
 		this.projectDataFolder = projectDataFolder;
 	}
 	
-	public void fillTable(ClusterManager clusterManager, TableData tableData, JTabbedPane tabbedPane, GuiAuxilliary aux, String inputCsv, String outputAssessment1, String outputAssessment2) {
+	public void fillTable(ClusterManager clusterManager, TreeManager treeManager, TableData tableData, JTabbedPane tabbedPane, GuiAuxilliary aux, String inputCsv, String outputAssessment1, String outputAssessment2) {
 		TableConstructionIDU table=new TableConstructionIDU(allPPLSchemas, allPPLTransitions);
 		final String[] columns=table.constructColumns();
 		final String[][] rows=table.constructRows();
@@ -180,7 +180,7 @@ public class TableManager {
 			tableData.setFinalRows(rowsP);
 			tabbedPane.setSelectedIndex(0);
 			aux.makeGeneralTablePhases(tableData, tabbedPane);
-			//fillClustersTree();
+			treeManager.fillClustersTree(clusterManager);
 		}
 		System.out.println("Schemas:"+getAllPPLSchemas().size());
 		System.out.println("Transitions:"+getAllPPLTransitions().size());
