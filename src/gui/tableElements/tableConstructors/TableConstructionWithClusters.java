@@ -6,7 +6,9 @@ import java.util.TreeMap;
 
 import phaseAnalyzer.commons.Phase;
 import tableClustering.clusterExtractor.commons.Cluster;
+import data.dataKeeper.ClusterManager;
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataKeeper.TableManager;
 import data.dataPPL.pplTransition.AtomicChange;
 import data.dataPPL.pplTransition.PPLTransition;
 import data.dataPPL.pplTransition.TableChange;
@@ -25,11 +27,21 @@ public class TableConstructionWithClusters implements PldConstruction{
 	private int maxTotalChangesForOneTr=1;
 	private Integer[] segmentSize=new Integer[4];
 	
+	//to be deprecated
 	public TableConstructionWithClusters(GlobalDataKeeper globalDataKeeper){
 		
 		globalDataKeeper.getAllPPLSchemas();
 		phases=globalDataKeeper.getPhaseCollectors().get(0).getPhases();
 		clusters=globalDataKeeper.getClusterCollectors().get(0).getClusters();
+		
+		
+	}
+	
+	public TableConstructionWithClusters(ClusterManager clusterManager, TableManager tableManager){
+		
+		tableManager.getAllPPLSchemas();
+		phases=clusterManager.getPhaseCollectors().get(0).getPhases();
+		clusters=clusterManager.getClusterCollectors().get(0).getClusters();
 		
 		
 	}

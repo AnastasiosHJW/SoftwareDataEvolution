@@ -7,13 +7,14 @@ import java.util.TreeMap;
 import tableClustering.clusterExtractor.commons.Cluster;
 import tableClustering.clusterExtractor.commons.ClusterCollector;
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
 
 
 public class AgglomerativeClusterExtractor implements ClusterExtractor{
 
 	
-
+	//to be deprecated
 	@Override
 	public ClusterCollector extractAtMostKClusters(GlobalDataKeeper dataKeeper,
 			int numClusters, Double birthWeight, Double deathWeight, Double changeWeight) {
@@ -25,6 +26,22 @@ public class AgglomerativeClusterExtractor implements ClusterExtractor{
 		currentSolution = this.newClusterCollector(initSolution, birthWeight, deathWeight, changeWeight,dataKeeper.getAllPPLSchemas().size()-1);
 		while (currentSolution.getClusters().size() > numClusters){
 			currentSolution = this.newClusterCollector(currentSolution, birthWeight, deathWeight, changeWeight,dataKeeper.getAllPPLSchemas().size()-1);
+		}
+		return currentSolution;
+		
+	}
+	
+	
+	public ClusterCollector extractAtMostKClusters(TreeMap<String,PPLSchema> allPPLSchemas, TreeMap<String,PPLTable> allPPLTables,
+			int numClusters, Double birthWeight, Double deathWeight, Double changeWeight) {
+		
+		ClusterCollector initSolution = new ClusterCollector();
+		this.init(allPPLTables, initSolution);
+		
+		ClusterCollector currentSolution = new ClusterCollector();
+		currentSolution = this.newClusterCollector(initSolution, birthWeight, deathWeight, changeWeight,allPPLSchemas.size()-1);
+		while (currentSolution.getClusters().size() > numClusters){
+			currentSolution = this.newClusterCollector(currentSolution, birthWeight, deathWeight, changeWeight,allPPLSchemas.size()-1);
 		}
 		return currentSolution;
 		
@@ -94,10 +111,24 @@ public class AgglomerativeClusterExtractor implements ClusterExtractor{
 		return newCollector;
 	}
 	
-	
+	//to be deprecated
 	public ClusterCollector init(GlobalDataKeeper dataKeeper, ClusterCollector clusterCollector){
 		
 		TreeMap<String, PPLTable> tables=dataKeeper.getAllPPLTables();
+
+		
+		for (Map.Entry<String,PPLTable> pplTable : tables.entrySet()) {
+			Cluster c = new Cluster(pplTable.getValue().getBirthVersionID(),pplTable.getValue().getDeath(),pplTable.getValue().getDeathVersionID(),pplTable.getValue().getDeath(),pplTable.getValue().getTotalChanges());
+			c.addTable(pplTable.getValue());
+			clusterCollector.addCluster(c);
+			
+		}
+		return clusterCollector;
+	}
+	
+	public ClusterCollector init(TreeMap<String,PPLTable> allPPLTables, ClusterCollector clusterCollector){
+		
+		TreeMap<String, PPLTable> tables=allPPLTables;
 
 		
 		for (Map.Entry<String,PPLTable> pplTable : tables.entrySet()) {

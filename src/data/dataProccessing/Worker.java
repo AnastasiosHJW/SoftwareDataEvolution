@@ -40,6 +40,9 @@ public class Worker {
 		
 		ImportSchemas filesToImportData=new ImportSchemas(filename,transitionsFile);
 		try {
+			System.out.println("Worker");
+			System.out.println(filename);
+			System.out.println(transitionsFile);
 			filesToImportData.loadDataset();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -2,8 +2,10 @@
 package phaseAnalyzer.commons;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataPPL.pplTransition.PPLTransition;
 
 public class PhaseCollector {
 	public PhaseCollector(){
@@ -71,10 +73,20 @@ public class PhaseCollector {
 		return s;
 	}
 
+	//to be deprecated
 	public void connectPhasesWithTransitions(GlobalDataKeeper tmpGlobalDataKeeper){
 		for(Phase p: phases){
 		
 			p.connectWithPPLTransitions(tmpGlobalDataKeeper);
+			
+		}
+		
+	}
+	
+	public void connectPhasesWithTransitions(TreeMap<Integer,PPLTransition> PPLTransitions){
+		for(Phase p: phases){
+		
+			p.connectWithPPLTransitions(PPLTransitions);
 			
 		}
 		

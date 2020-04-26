@@ -27,10 +27,19 @@ public class TableConstructionIDU implements PldConstruction {
 
 	private Integer segmentSize[]=new Integer[4];
 	
+	//to be deprecated
 	public TableConstructionIDU(GlobalDataKeeper globalDataKeeper){
 		
 		allPPLSchemas=globalDataKeeper.getAllPPLSchemas();
 		allPPLTransitions=globalDataKeeper.getAllPPLTransitions();
+		
+		
+	}
+	
+	public TableConstructionIDU(TreeMap<String,PPLSchema> allPPLSchemas, TreeMap<Integer,PPLTransition> allPPLTransitions){
+		
+		this.allPPLSchemas=allPPLSchemas;
+		this.allPPLTransitions=allPPLTransitions;
 		
 		
 	}

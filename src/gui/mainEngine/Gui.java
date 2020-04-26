@@ -70,7 +70,7 @@ import org.antlr.v4.runtime.RecognitionException;
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
 import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 import tableClustering.clusterValidator.engine.ClusterValidatorMainEngine;
-import data.dataKeeper.GlobalDataKeeper;
+import data.dataKeeper.*;
 import data.dataSorters.PldRowSorter;
 
 
@@ -174,6 +174,12 @@ public class Gui extends JFrame implements ActionListener{
 	private JButton undoButton;
 	private JMenu mnProject;
 	private JMenuItem mntmInfo;
+	
+	private ProjectManager projectManager;
+	private TableManager tableManager;
+	private ClusterManager clusterManager;
+	
+	private TableData tableData;
 
 	
 	/**
@@ -275,7 +281,20 @@ public class Gui extends JFrame implements ActionListener{
 					return;
 				}
 				try {
-					importData(fileName);
+					//importData(fileName);
+					
+					///*
+					GuiAuxilliary aux = new GuiAuxilliary(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
+							zoomAreaTable, zoomModel, generalModel, descriptionText);
+					aux.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
+					projectManager = new ProjectManager(projectName, datasetTxt, inputCsv,  outputAssessment1,
+							 outputAssessment2,  transitionsFile,  currentProject);
+					tableManager = new TableManager();
+					clusterManager = new ClusterManager();
+					tableData = new TableData();
+					aux.setManagers(tableManager,clusterManager);
+					projectManager.importData(fileName, tableManager, clusterManager, tableData ,aux, tabbedPane);
+					//*/
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
 					return;
@@ -2623,27 +2642,6 @@ private void makeZoomAreaTableForCluster() {
 		System.out.println("Schemas:"+globalDataKeeper.getAllPPLSchemas().size());
 		System.out.println("Transitions:"+globalDataKeeper.getAllPPLTransitions().size());
 		System.out.println("Tables:"+globalDataKeeper.getAllPPLTables().size());
-
-		/*ClusterValidatorMainEngine lala;
-		try {
-			lala = new ClusterValidatorMainEngine(globalDataKeeper);
-			lala.run();
-			//lala.getExternalEvaluationReport();
-			getExternalValidityReport(lala.getExternalEvaluationReport());
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		//optimize();
-		/*
-		try {
-			getExternalValidityReport();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
 
 	}
 	

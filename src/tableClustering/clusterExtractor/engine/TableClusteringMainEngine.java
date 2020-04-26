@@ -1,11 +1,14 @@
 package tableClustering.clusterExtractor.engine;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import tableClustering.clusterExtractor.analysis.ClusterExtractor;
 import tableClustering.clusterExtractor.analysis.ClusterExtractorFactory;
 import tableClustering.clusterExtractor.commons.ClusterCollector;
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataPPL.pplSQLSchema.PPLSchema;
+import data.dataPPL.pplSQLSchema.PPLTable;
 
 public class TableClusteringMainEngine {
 	
@@ -17,7 +20,11 @@ public class TableClusteringMainEngine {
 	private ClusterExtractorFactory clusterExtractorFactory;
 	private ClusterExtractor clusterExtractor;
 	private ArrayList<ClusterCollector> allClusterCollectors;
+	
+	private TreeMap<String,PPLSchema> allPPLSchemas = null;
+	private TreeMap<String,PPLTable> allPPLTables = null;
 
+	//to be deprecated
 	public TableClusteringMainEngine(GlobalDataKeeper dataKeeper,Double birthWeight, Double deathWeight,
 			Double changeWeight){
 		
@@ -33,11 +40,43 @@ public class TableClusteringMainEngine {
 
 	}
 	
+
+	public TableClusteringMainEngine(TreeMap<String,PPLSchema> allPPLSchemas, TreeMap<String,PPLTable> allPPLTables,Double birthWeight, Double deathWeight,
+			Double changeWeight){
+		
+
+		this.birthWeight=birthWeight;
+		this.deathWeight=deathWeight;
+		this.changeWeight=changeWeight;
+		
+		clusterExtractorFactory = new ClusterExtractorFactory();
+		clusterExtractor = clusterExtractorFactory.createClusterExtractor("AgglomerativeClusterExtractor");
+		
+		allClusterCollectors = new ArrayList<ClusterCollector>();
+		
+		this.allPPLSchemas = allPPLSchemas;
+		this.allPPLTables = allPPLTables;
+
+	}
+	
+	//to be deprecated
 	public void extractClusters(int numClusters){
 		
 		clusterCollectors = new ArrayList<ClusterCollector>();
 		ClusterCollector clusterCollector = new ClusterCollector();
 		clusterCollector = clusterExtractor.extractAtMostKClusters(dataKeeper, numClusters, birthWeight, deathWeight, changeWeight);
+		clusterCollector.sortClustersByBirthDeath();
+		clusterCollectors.add(clusterCollector);
+		
+		allClusterCollectors.add(clusterCollector);
+
+	}
+	
+	public void extractClusters2(int numClusters){
+		
+		clusterCollectors = new ArrayList<ClusterCollector>();
+		ClusterCollector clusterCollector = new ClusterCollector();
+		clusterCollector = clusterExtractor.extractAtMostKClusters(allPPLSchemas, allPPLTables, numClusters, birthWeight, deathWeight, changeWeight);
 		clusterCollector.sortClustersByBirthDeath();
 		clusterCollectors.add(clusterCollector);
 		

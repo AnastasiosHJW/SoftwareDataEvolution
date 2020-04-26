@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import data.dataKeeper.ClusterManager;
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataKeeper.TableManager;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
 import data.dataPPL.pplTransition.AtomicChange;
@@ -31,6 +33,9 @@ public class TableConstructionZoomArea implements PldConstruction {
 
 	private Integer segmentSize[]=new Integer[4];
 	
+	private TableManager tableManager;
+	private ClusterManager clusterManager;
+	
 	public TableConstructionZoomArea(GlobalDataKeeper globalDataKeeper,ArrayList<String> sSelectedTables,int selectedColumn){
 		this.globalDataKeeper=globalDataKeeper;
 		allPPLSchemas=globalDataKeeper.getAllPPLSchemas();
@@ -41,8 +46,19 @@ public class TableConstructionZoomArea implements PldConstruction {
 		fillSelectedTables();
 	}
 	
+	public TableConstructionZoomArea(TableManager tableManager, ClusterManager clusterManager,ArrayList<String> sSelectedTables,int selectedColumn){
+		this.tableManager=tableManager;
+		this.clusterManager  = clusterManager;
+		allPPLSchemas=tableManager.getAllPPLSchemas();
+		this.sSelectedTables=sSelectedTables;
+		this.selectedColumn=selectedColumn;
+		fillSelectedPPLTransitions();
+		fillSelectedPPLSchemas();
+		fillSelectedTables2();
+	}
 	
 	
+	//to be deprecated
 	private void fillSelectedPPLTransitions() {
 		
 		if(selectedColumn==0){
@@ -50,6 +66,18 @@ public class TableConstructionZoomArea implements PldConstruction {
 		}
 		else{
 			pplTransitions=globalDataKeeper.getPhaseCollectors().get(0).getPhases().get(selectedColumn-1).getPhasePPLTransitions();
+
+		}
+		
+	}
+	
+	private void fillSelectedPPLTransitions2() {
+		
+		if(selectedColumn==0){
+			pplTransitions=tableManager.getAllPPLTransitions();
+		}
+		else{
+			pplTransitions=clusterManager.getPhaseCollectors().get(0).getPhases().get(selectedColumn-1).getPhasePPLTransitions();
 
 		}
 		
@@ -65,10 +93,19 @@ public class TableConstructionZoomArea implements PldConstruction {
 		
 	}
 	
+	//to be deprecated
 	private void fillSelectedTables(){
 		
 		for(int i=0; i<sSelectedTables.size(); i++){
 			selectedTables.put(sSelectedTables.get(i),this.globalDataKeeper.getAllPPLTables().get(sSelectedTables.get(i)) );
+		}
+		
+	}
+	
+	private void fillSelectedTables2(){
+		
+		for(int i=0; i<sSelectedTables.size(); i++){
+			selectedTables.put(sSelectedTables.get(i),this.tableManager.getAllPPLTables().get(sSelectedTables.get(i)) );
 		}
 		
 	}
