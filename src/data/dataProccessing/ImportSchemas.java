@@ -40,27 +40,18 @@ public class ImportSchemas {
 
 	@SuppressWarnings("static-access")
 	public void loadDataset() throws IOException{
-		System.out.println("ImportSchema");
-		System.out.println(filepath);
-		System.out.println(transitionsFile);
-		System.out.println("-----");
 		BufferedReader br = new BufferedReader(new FileReader(filepath));
 		File f = new File(filepath);
 		String dataset = (f.getName().split("\\."))[0];
-		System.out.println(dataset);
 		String d = f.getParent();
-		System.out.println("parent directory: " + d);
 		f = new File(d);
 		String path = f.getAbsolutePath() + File.separator + dataset;
 		
-		System.out.println(path);
-		System.out.println("-");
 		ArrayList<String> sAllSchemas = new ArrayList<String>();
 		String line;
 		
 		while(true) {
 			line = br.readLine();
-			System.out.println(line);
 			if (line == null) 
 				break;
 			sAllSchemas.add(line);

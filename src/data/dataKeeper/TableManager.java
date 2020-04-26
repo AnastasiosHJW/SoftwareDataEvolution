@@ -1,5 +1,7 @@
 package data.dataKeeper;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -129,16 +131,24 @@ public class TableManager {
 		this.projectDataFolder = projectDataFolder;
 	}
 	
-	public void fillTable(ClusterManager clusterManager, TreeManager treeManager, TableData tableData, JTabbedPane tabbedPane, GuiAuxilliary aux, String inputCsv, String outputAssessment1, String outputAssessment2) {
+	public void fillTable(ClusterManager clusterManager, TreeManager treeManager, TableData tableData, JTabbedPane tabbedPane, GuiAuxilliary aux, String inputCsv, String outputAssessment1, String outputAssessment2, String projectName) {
 		TableConstructionIDU table=new TableConstructionIDU(allPPLSchemas, allPPLTransitions);
 		final String[] columns=table.constructColumns();
 		final String[][] rows=table.constructRows();
+		
+		saveData(columns,rows,"simple", projectName);
+		
 		tableData.setSegmentSizeZoomArea(table.getSegmentSize());
 
 		tableData.setFinalColumnsZoomArea(columns);
 		tableData.setFinalRowsZoomArea(rows);
-		tabbedPane.setSelectedIndex(0);
-		aux.makeGeneralTableIDU(tableData);
+
+		if (aux != null && tabbedPane != null)
+		{
+			tabbedPane.setSelectedIndex(0);
+			aux.makeGeneralTableIDU(tableData);
+		}
+		
 		
 		clusterManager.setTimeWeight((float)0.5);
         clusterManager.setChangeWeight((float)0.5);
@@ -175,12 +185,19 @@ public class TableManager {
 			TableConstructionWithClusters tableP=new TableConstructionWithClusters(clusterManager, this);
 			final String[] columnsP=tableP.constructColumns();
 			final String[][] rowsP=tableP.constructRows();
+			
+			saveData(columnsP,rowsP,"phases", projectName);
+			
 			tableData.setSegmentSize(tableP.getSegmentSize());
 			tableData.setFinalColumns(columnsP);
 			tableData.setFinalRows(rowsP);
-			tabbedPane.setSelectedIndex(0);
-			aux.makeGeneralTablePhases(tableData, tabbedPane);
-			treeManager.fillClustersTree(clusterManager);
+			
+			if (aux != null && treeManager != null && tabbedPane != null) {
+				tabbedPane.setSelectedIndex(0);
+				aux.makeGeneralTablePhases(tableData, tabbedPane);
+				treeManager.fillClustersTree(clusterManager);
+			}
+			
 		}
 		System.out.println("Schemas:"+getAllPPLSchemas().size());
 		System.out.println("Transitions:"+getAllPPLTransitions().size());
@@ -188,6 +205,98 @@ public class TableManager {
 
 	}
 	
+	public void fillTableTest(ClusterManager clusterManager, TableData tableData, String inputCsv, String outputAssessment1, String outputAssessment2, String projectName)
+	{
+		TableConstructionIDU table=new TableConstructionIDU(allPPLSchemas, allPPLTransitions);
+		final String[] columns=table.constructColumns();
+		final String[][] rows=table.constructRows();
+		
+		saveData(columns,rows,"simple", projectName);
+		
+		tableData.setSegmentSizeZoomArea(table.getSegmentSize());
+
+		tableData.setFinalColumnsZoomArea(columns);
+		tableData.setFinalRowsZoomArea(rows);
+		
+		clusterManager.setTimeWeight((float)0.5);
+        clusterManager.setChangeWeight((float)0.5);
+        clusterManager.setPreProcessingTime(false);
+        clusterManager.setPreProcessingChange(false);
+        if(getAllPPLTransitions().size()<56){
+        	clusterManager.setNumberOfPhases(40);
+        }
+        else{
+        	clusterManager.setNumberOfPhases(56);
+        }
+        clusterManager.setNumberOfClusters(14);
+        
+        System.out.println(clusterManager.getTimeWeight()+" "+clusterManager.getChangeWeight());
+        
+		PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,outputAssessment1,outputAssessment2, clusterManager);
+
+		Double b=new Double(0.3);
+		Double d=new Double(0.3);
+		Double c=new Double(0.3);
+			
+		mainEngine.parseInput();		
+		System.out.println("\n\n\n");
+		mainEngine.extractPhases(clusterManager.getNumberOfPhases());
+		
+		mainEngine.connectTransitionsWithPhases(allPPLTransitions);
+		clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
+		TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(allPPLSchemas, allPPLTables,b,d,c);
+		mainEngine2.extractClusters2(clusterManager.getNumberOfClusters());
+		clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
+		mainEngine2.print();
+		
+		if(clusterManager.getPhaseCollectors().size()!=0){
+			TableConstructionWithClusters tableP=new TableConstructionWithClusters(clusterManager, this);
+			final String[] columnsP=tableP.constructColumns();
+			final String[][] rowsP=tableP.constructRows();
+			
+			saveData(columnsP,rowsP,"phases", projectName);
+
+		}
+		System.out.println("Schemas:"+getAllPPLSchemas().size());
+		System.out.println("Transitions:"+getAllPPLTransitions().size());
+		System.out.println("Tables:"+getAllPPLTables().size());
+
+	}
+	
+	
+	public void saveData(String[] columns, String[][] rows, String type, String projectName)
+	{
+		String testFile = "test_" + type + "_" + projectName;
+		
+		String testString = "";
+		
+		for (int i=0;i<columns.length;i++)
+		{
+			testString+=columns[i] + "/n";
+		}
+		testString+="COLUMNS_ROWS_SEPARATOR/n";
+		
+		for (int i=0; i<rows.length;i++)
+		{
+			for (int j=0; j<columns.length;j++)
+			{
+				testString+=rows[i][j] + "/n";
+			}
+			testString+="ROWS_SPEARATOR/n";
+		}
+		
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new FileWriter(testFile));
+			writer.write(testString);
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		
+	}
 	
 	
 
