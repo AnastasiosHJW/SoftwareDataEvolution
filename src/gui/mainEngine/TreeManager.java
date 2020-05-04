@@ -1,4 +1,4 @@
-package data.dataKeeper;
+package gui.mainEngine;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +17,9 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+import data.dataKeeper.ClusterManager;
+import data.dataKeeper.TableData;
+import data.dataKeeper.TableManager;
 import gui.tableElements.commons.JvTable;
 import gui.treeElements.TreeConstructionGeneral;
 import gui.treeElements.TreeConstructionPhasesWithClusters;
@@ -33,21 +36,22 @@ public class TreeManager {
 	
 	private ArrayList<String> selectedFromTree=new ArrayList<String>();
 	
-	private JvTable LifeTimeTable;
+	private TableData tableData;
 	
 
 	public TreeManager(JLabel treeLabel, JTree tablesTree, JPanel sideMenu, JPanel tablesTreePanel,
-			JScrollPane treeScrollPane, ArrayList<String> selectedFromTree, JvTable LifeTimeTable) {
+			JScrollPane treeScrollPane, ArrayList<String> selectedFromTree, TableData tableData) {
 		this.treeLabel = treeLabel;
 		this.tablesTree = tablesTree;
 		this.sideMenu = sideMenu;
 		this.tablesTreePanel = tablesTreePanel;
 		this.treeScrollPane = treeScrollPane;
 		this.selectedFromTree = selectedFromTree;
-		this.LifeTimeTable = LifeTimeTable;
+		this.tableData = tableData;
 	}
 
 	public void fillClustersTree(ClusterManager clusterManager){
+		
 		
 		 TreeConstructionPhasesWithClusters tc=new TreeConstructionPhasesWithClusters(clusterManager);
 		 tablesTree=tc.constructTree2();
@@ -75,7 +79,7 @@ public class TreeManager {
 					            @Override
 					            public void actionPerformed(ActionEvent e) {
 					          
-					                LifeTimeTable.repaint();
+					            	tableData.getLifeTimeTable().repaint();
 					            	
 					            }
 					        });
@@ -131,7 +135,7 @@ public class TreeManager {
 							            @Override
 							            public void actionPerformed(ActionEvent e) {
 							          
-							                LifeTimeTable.repaint();
+							            	tableData.getLifeTimeTable().repaint();
 							            	
 							            }
 							        });

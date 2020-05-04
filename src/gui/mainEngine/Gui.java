@@ -7,6 +7,7 @@ import gui.dialogs.ParametersJDialog;
 import gui.dialogs.ProjectInfoDialog;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
+import gui.tableElements.commons.ShowDetailsComponents;
 import gui.tableElements.tableConstructors.PldConstruction;
 import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 import gui.tableElements.tableConstructors.TableConstructionClusterTablesPhasesZoomA;
@@ -175,12 +176,15 @@ public class Gui extends JFrame implements ActionListener{
 	private JMenu mnProject;
 	private JMenuItem mntmInfo;
 	
-	private ProjectManager projectManager;
-	private TableManager tableManager;
-	private ClusterManager clusterManager;
+	//private ProjectManager projectManager;
+	//private TableManager tableManager;
+	//private ClusterManager clusterManager;
 	private TreeManager treeManager;
 	
 	private TableData tableData;
+	
+	private GlobalManager globalManager;
+	private ShowDetailsComponents showDetails;
 
 	
 	/**
@@ -216,6 +220,259 @@ public class Gui extends JFrame implements ActionListener{
 		
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
+		
+
+		sideMenu.setBounds(0, 0, 280, 600);
+		sideMenu.setBackground(Color.DARK_GRAY);
+		
+		
+		
+		GroupLayout gl_sideMenu = new GroupLayout(sideMenu);
+		gl_sideMenu.setHorizontalGroup(
+				gl_sideMenu.createParallelGroup(Alignment.LEADING)
+		);
+		gl_sideMenu.setVerticalGroup(
+				gl_sideMenu.createParallelGroup(Alignment.LEADING)
+		);
+		
+		sideMenu.setLayout(gl_sideMenu);
+		
+		tablesTreePanel.setBounds(10, 400, 260, 180);
+		tablesTreePanel.setBackground(Color.LIGHT_GRAY);
+		
+		GroupLayout gl_tablesTreePanel = new GroupLayout(tablesTreePanel);
+		gl_tablesTreePanel.setHorizontalGroup(
+				gl_tablesTreePanel.createParallelGroup(Alignment.LEADING)
+		);
+		gl_tablesTreePanel.setVerticalGroup(
+				gl_tablesTreePanel.createParallelGroup(Alignment.LEADING)
+		);
+		
+		tablesTreePanel.setLayout(gl_tablesTreePanel);
+		
+		treeLabel=new JLabel();
+		treeLabel.setBounds(10, 370, 260, 40);
+		treeLabel.setForeground(Color.WHITE);
+		treeLabel.setText("Tree");
+		
+		descriptionPanel.setBounds(10, 190, 260, 180);
+		descriptionPanel.setBackground(Color.LIGHT_GRAY);
+		
+		GroupLayout gl_descriptionPanel = new GroupLayout(descriptionPanel);
+		gl_descriptionPanel.setHorizontalGroup(
+				gl_descriptionPanel.createParallelGroup(Alignment.LEADING)
+		);
+		gl_descriptionPanel.setVerticalGroup(
+				gl_descriptionPanel.createParallelGroup(Alignment.LEADING)
+		);
+		
+		descriptionPanel.setLayout(gl_descriptionPanel);
+		
+		descriptionText=new JTextArea();
+		descriptionText.setBounds(5, 5, 250, 170);
+		descriptionText.setForeground(Color.BLACK);
+		descriptionText.setText("");
+		descriptionText.setBackground(Color.LIGHT_GRAY);
+		
+		descriptionPanel.add(descriptionText);
+		
+		
+		descriptionLabel=new JLabel();
+		descriptionLabel.setBounds(10, 160, 260, 40);
+		descriptionLabel.setForeground(Color.WHITE);
+		descriptionLabel.setText("Description");
+		
+		sideMenu.add(treeLabel);
+		sideMenu.add(tablesTreePanel);
+		
+		sideMenu.add(descriptionLabel);
+		sideMenu.add(descriptionPanel);
+
+		lifeTimePanel.add(sideMenu);
+		
+		JButton buttonHelp=new JButton("Help");
+		buttonHelp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String message ="To open a project, you must select a .txt file that contains the names ONLY of " +
+									"the SQL files of the dataset that you want to use."+"\n" +
+									"The .txt file must have EXACTLY the same name with the folder " +
+									"that contains the DDL Scripts of the dataset."+ "\n" +
+									"Both .txt file and dataset folder must be in the same folder.";
+				JOptionPane.showMessageDialog(null,message); 				
+			}
+		});
+		contentPane = new JPanel();
+		
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		
+		
+		GroupLayout gl_contentPane = new GroupLayout(contentPane);
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(tabbedPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1474, Short.MAX_VALUE)
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(tabbedPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
+		);
+		
+		
+		tabbedPane.addTab("LifeTime Table", null, lifeTimePanel, null);
+		
+		GroupLayout gl_lifeTimePanel = new GroupLayout(lifeTimePanel);
+		gl_lifeTimePanel.setHorizontalGroup(
+			gl_lifeTimePanel.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 1469, Short.MAX_VALUE)
+		);
+		gl_lifeTimePanel.setVerticalGroup(
+			gl_lifeTimePanel.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 743, Short.MAX_VALUE)
+		);
+		lifeTimePanel.setLayout(gl_lifeTimePanel);
+		
+		
+		generalTableLabel=new JLabel("Parallel Lives Diagram");
+		generalTableLabel.setBounds(300, 0, 150, 30);
+		generalTableLabel.setForeground(Color.BLACK);
+		
+		zoomAreaLabel=new JLabel();
+		zoomAreaLabel.setText("<HTML>Z<br>o<br>o<br>m<br><br>A<br>r<br>e<br>a</HTML>");
+		zoomAreaLabel.setBounds(1255, 325, 15, 300);
+		zoomAreaLabel.setForeground(Color.BLACK);
+		
+		zoomInButton = new JButton("Zoom In");
+		zoomInButton.setBounds(1000, 560, 100, 30);
+		
+		
+		
+		zoomInButton.addMouseListener(new MouseAdapter() {
+			@Override
+			   public void mouseClicked(MouseEvent e) {
+				rowHeight=rowHeight+2;
+				columnWidth=columnWidth+1;
+				zoomAreaTable.setZoom(rowHeight,columnWidth);
+				
+			}
+		});
+		
+		zoomOutButton = new JButton("Zoom Out");
+		zoomOutButton.setBounds(1110, 560, 100, 30);
+		
+		zoomOutButton.addMouseListener(new MouseAdapter() {
+			@Override
+			   public void mouseClicked(MouseEvent e) {
+				rowHeight=rowHeight-2;
+				columnWidth=columnWidth-1;
+				if(rowHeight<1){
+					rowHeight=1;
+				}
+				if (columnWidth<1) {
+					columnWidth=1;
+				}
+				zoomAreaTable.setZoom(rowHeight,columnWidth);
+				
+			}
+		});
+		
+		zoomInButton.setVisible(false);
+		zoomOutButton.setVisible(false);
+		
+		
+		showThisToPopup = new JButton("Enlarge");
+		showThisToPopup.setBounds(800, 560, 100, 30);
+		
+		showThisToPopup.addMouseListener(new MouseAdapter() {
+			@Override
+			   public void mouseClicked(MouseEvent e) {
+				
+				EnlargeTable showEnlargmentPopup= new EnlargeTable(finalRowsZoomArea,finalColumnsZoomArea,segmentSizeZoomArea);
+				showEnlargmentPopup.setBounds(100, 100, 1300, 700);
+				
+				showEnlargmentPopup.setVisible(true);
+				
+				
+			}
+		});
+		
+		showThisToPopup.setVisible(false);
+		
+		
+		undoButton = new JButton("Undo");
+		undoButton.setBounds(680, 560, 100, 30);
+		
+		undoButton.addMouseListener(new MouseAdapter() {
+			@Override
+			   public void mouseClicked(MouseEvent e) {
+				if (firstLevelUndoColumnsZoomArea!=null) {
+					finalColumnsZoomArea=firstLevelUndoColumnsZoomArea;
+					finalRowsZoomArea=firstLevelUndoRowsZoomArea;
+					makeZoomAreaTableForCluster();
+				}
+				
+			}
+		});
+		
+		undoButton.setVisible(false);
+		
+		
+		uniformlyDistributedButton = new JButton("Same Width"); 
+		uniformlyDistributedButton.setBounds(980, 0, 120, 30);
+		
+		uniformlyDistributedButton.addMouseListener(new MouseAdapter() {
+			@Override
+			   public void mouseClicked(MouseEvent e) {
+			    LifeTimeTable.uniformlyDistributed(1);
+			    
+			  } 
+		});
+		
+		uniformlyDistributedButton.setVisible(false);
+		
+		notUniformlyDistributedButton = new JButton("Over Time"); 
+		notUniformlyDistributedButton.setBounds(1100, 0, 120, 30);
+		
+		notUniformlyDistributedButton.addMouseListener(new MouseAdapter() {
+			@Override
+			   public void mouseClicked(MouseEvent e) {
+			    LifeTimeTable.notUniformlyDistributed(globalDataKeeper);
+			    
+			  } 
+		});
+		
+		notUniformlyDistributedButton.setVisible(false);
+		
+		lifeTimePanel.add(zoomInButton);
+		lifeTimePanel.add(undoButton);
+		lifeTimePanel.add(zoomOutButton);
+		lifeTimePanel.add(uniformlyDistributedButton);
+		lifeTimePanel.add(notUniformlyDistributedButton);
+		lifeTimePanel.add(showThisToPopup);
+
+		lifeTimePanel.add(zoomAreaLabel);
+		
+		lifeTimePanel.add(generalTableLabel);
+		
+		contentPane.setLayout(gl_contentPane);
+		
+		showDetails = new ShowDetailsComponents(descriptionText, tabbedPane, tmpScrollPaneZoomArea, zoomModel, zoomAreaTable, lifeTimePanel, undoButton);
+		
+		globalManager = new GlobalManager();
+		
+		final GuiAuxilliary aux = new GuiAuxilliary(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
+				zoomModel, generalModel, descriptionText);
+		aux.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
+		treeManager = new TreeManager(treeLabel, tablesTree, sideMenu, tablesTreePanel,
+ treeScrollPane, selectedFromTree,  tableData);
+		aux.setShowDetails(showDetails);
+		
+		tableData = new TableData();
+		aux.setManagers(globalManager.getTableManager(),globalManager.getClusterManager());
+		
+		final GuiAux aux2 = new GuiAux(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
+				zoomAreaTable, zoomModel, generalModel, descriptionText);
+		aux2.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
+		aux2.setManagers(globalManager.getTableManager(),globalManager.getClusterManager());
 		
 		JMenuItem mntmCreateProject = new JMenuItem("Create Project");
 		mntmCreateProject.addActionListener(new ActionListener() {
@@ -286,20 +543,10 @@ public class Gui extends JFrame implements ActionListener{
 				try {
 					//importData(fileName);
 					
-					///*
-					GuiAuxilliary aux = new GuiAuxilliary(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
-							zoomAreaTable, zoomModel, generalModel, descriptionText);
-					aux.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
-					projectManager = new ProjectManager(projectName, datasetTxt, inputCsv,  outputAssessment1,
-							 outputAssessment2,  transitionsFile,  currentProject);
-					tableManager = new TableManager();
-					clusterManager = new ClusterManager();
-					treeManager = new TreeManager(treeLabel, tablesTree, sideMenu, tablesTreePanel,
-			 treeScrollPane, selectedFromTree,  LifeTimeTable);
-					tableData = new TableData();
-					aux.setManagers(tableManager,clusterManager);
-					projectManager.importData(fileName, tableManager, clusterManager, treeManager, tableData ,aux, tabbedPane);
-					//*/
+
+					
+					globalManager.importData(fileName, treeManager, tableData ,aux2, tabbedPane);
+					System.out.println("Data imported");
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
 					return;
@@ -609,7 +856,6 @@ public class Gui extends JFrame implements ActionListener{
 								lala.run();
 
 							} catch (IOException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 							*/
@@ -632,85 +878,6 @@ public class Gui extends JFrame implements ActionListener{
 		mnTable.add(mntmShowLifetimeTable);
 		
 
-		sideMenu.setBounds(0, 0, 280, 600);
-		sideMenu.setBackground(Color.DARK_GRAY);
-		
-		
-		
-		GroupLayout gl_sideMenu = new GroupLayout(sideMenu);
-		gl_sideMenu.setHorizontalGroup(
-				gl_sideMenu.createParallelGroup(Alignment.LEADING)
-		);
-		gl_sideMenu.setVerticalGroup(
-				gl_sideMenu.createParallelGroup(Alignment.LEADING)
-		);
-		
-		sideMenu.setLayout(gl_sideMenu);
-		
-		tablesTreePanel.setBounds(10, 400, 260, 180);
-		tablesTreePanel.setBackground(Color.LIGHT_GRAY);
-		
-		GroupLayout gl_tablesTreePanel = new GroupLayout(tablesTreePanel);
-		gl_tablesTreePanel.setHorizontalGroup(
-				gl_tablesTreePanel.createParallelGroup(Alignment.LEADING)
-		);
-		gl_tablesTreePanel.setVerticalGroup(
-				gl_tablesTreePanel.createParallelGroup(Alignment.LEADING)
-		);
-		
-		tablesTreePanel.setLayout(gl_tablesTreePanel);
-		
-		treeLabel=new JLabel();
-		treeLabel.setBounds(10, 370, 260, 40);
-		treeLabel.setForeground(Color.WHITE);
-		treeLabel.setText("Tree");
-		
-		descriptionPanel.setBounds(10, 190, 260, 180);
-		descriptionPanel.setBackground(Color.LIGHT_GRAY);
-		
-		GroupLayout gl_descriptionPanel = new GroupLayout(descriptionPanel);
-		gl_descriptionPanel.setHorizontalGroup(
-				gl_descriptionPanel.createParallelGroup(Alignment.LEADING)
-		);
-		gl_descriptionPanel.setVerticalGroup(
-				gl_descriptionPanel.createParallelGroup(Alignment.LEADING)
-		);
-		
-		descriptionPanel.setLayout(gl_descriptionPanel);
-		
-		descriptionText=new JTextArea();
-		descriptionText.setBounds(5, 5, 250, 170);
-		descriptionText.setForeground(Color.BLACK);
-		descriptionText.setText("");
-		descriptionText.setBackground(Color.LIGHT_GRAY);
-		
-		descriptionPanel.add(descriptionText);
-		
-		
-		descriptionLabel=new JLabel();
-		descriptionLabel.setBounds(10, 160, 260, 40);
-		descriptionLabel.setForeground(Color.WHITE);
-		descriptionLabel.setText("Description");
-		
-		sideMenu.add(treeLabel);
-		sideMenu.add(tablesTreePanel);
-		
-		sideMenu.add(descriptionLabel);
-		sideMenu.add(descriptionPanel);
-
-		lifeTimePanel.add(sideMenu);
-		
-		JButton buttonHelp=new JButton("Help");
-		buttonHelp.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String message ="To open a project, you must select a .txt file that contains the names ONLY of " +
-									"the SQL files of the dataset that you want to use."+"\n" +
-									"The .txt file must have EXACTLY the same name with the folder " +
-									"that contains the DDL Scripts of the dataset."+ "\n" +
-									"Both .txt file and dataset folder must be in the same folder.";
-				JOptionPane.showMessageDialog(null,message); 				
-			}
-		});
 		
 		mnProject = new JMenu("Project");
 		menuBar.add(mnProject);
@@ -756,159 +923,6 @@ public class Gui extends JFrame implements ActionListener{
 		
 		
 		
-		contentPane = new JPanel();
-		
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		
-		
-		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(tabbedPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 1474, Short.MAX_VALUE)
-		);
-		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addComponent(tabbedPane, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
-		);
-		
-		
-		tabbedPane.addTab("LifeTime Table", null, lifeTimePanel, null);
-		
-		GroupLayout gl_lifeTimePanel = new GroupLayout(lifeTimePanel);
-		gl_lifeTimePanel.setHorizontalGroup(
-			gl_lifeTimePanel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 1469, Short.MAX_VALUE)
-		);
-		gl_lifeTimePanel.setVerticalGroup(
-			gl_lifeTimePanel.createParallelGroup(Alignment.LEADING)
-				.addGap(0, 743, Short.MAX_VALUE)
-		);
-		lifeTimePanel.setLayout(gl_lifeTimePanel);
-		
-		
-		generalTableLabel=new JLabel("Parallel Lives Diagram");
-		generalTableLabel.setBounds(300, 0, 150, 30);
-		generalTableLabel.setForeground(Color.BLACK);
-		
-		zoomAreaLabel=new JLabel();
-		zoomAreaLabel.setText("<HTML>Z<br>o<br>o<br>m<br><br>A<br>r<br>e<br>a</HTML>");
-		zoomAreaLabel.setBounds(1255, 325, 15, 300);
-		zoomAreaLabel.setForeground(Color.BLACK);
-		
-		zoomInButton = new JButton("Zoom In");
-		zoomInButton.setBounds(1000, 560, 100, 30);
-		
-		
-		
-		zoomInButton.addMouseListener(new MouseAdapter() {
-			@Override
-			   public void mouseClicked(MouseEvent e) {
-				rowHeight=rowHeight+2;
-				columnWidth=columnWidth+1;
-				zoomAreaTable.setZoom(rowHeight,columnWidth);
-				
-			}
-		});
-		
-		zoomOutButton = new JButton("Zoom Out");
-		zoomOutButton.setBounds(1110, 560, 100, 30);
-		
-		zoomOutButton.addMouseListener(new MouseAdapter() {
-			@Override
-			   public void mouseClicked(MouseEvent e) {
-				rowHeight=rowHeight-2;
-				columnWidth=columnWidth-1;
-				if(rowHeight<1){
-					rowHeight=1;
-				}
-				if (columnWidth<1) {
-					columnWidth=1;
-				}
-				zoomAreaTable.setZoom(rowHeight,columnWidth);
-				
-			}
-		});
-		
-		zoomInButton.setVisible(false);
-		zoomOutButton.setVisible(false);
-		
-		
-		showThisToPopup = new JButton("Enlarge");
-		showThisToPopup.setBounds(800, 560, 100, 30);
-		
-		showThisToPopup.addMouseListener(new MouseAdapter() {
-			@Override
-			   public void mouseClicked(MouseEvent e) {
-				
-				EnlargeTable showEnlargmentPopup= new EnlargeTable(finalRowsZoomArea,finalColumnsZoomArea,segmentSizeZoomArea);
-				showEnlargmentPopup.setBounds(100, 100, 1300, 700);
-				
-				showEnlargmentPopup.setVisible(true);
-				
-				
-			}
-		});
-		
-		showThisToPopup.setVisible(false);
-		
-		
-		undoButton = new JButton("Undo");
-		undoButton.setBounds(680, 560, 100, 30);
-		
-		undoButton.addMouseListener(new MouseAdapter() {
-			@Override
-			   public void mouseClicked(MouseEvent e) {
-				if (firstLevelUndoColumnsZoomArea!=null) {
-					finalColumnsZoomArea=firstLevelUndoColumnsZoomArea;
-					finalRowsZoomArea=firstLevelUndoRowsZoomArea;
-					makeZoomAreaTableForCluster();
-				}
-				
-			}
-		});
-		
-		undoButton.setVisible(false);
-		
-		
-		uniformlyDistributedButton = new JButton("Same Width"); 
-		uniformlyDistributedButton.setBounds(980, 0, 120, 30);
-		
-		uniformlyDistributedButton.addMouseListener(new MouseAdapter() {
-			@Override
-			   public void mouseClicked(MouseEvent e) {
-			    LifeTimeTable.uniformlyDistributed(1);
-			    
-			  } 
-		});
-		
-		uniformlyDistributedButton.setVisible(false);
-		
-		notUniformlyDistributedButton = new JButton("Over Time"); 
-		notUniformlyDistributedButton.setBounds(1100, 0, 120, 30);
-		
-		notUniformlyDistributedButton.addMouseListener(new MouseAdapter() {
-			@Override
-			   public void mouseClicked(MouseEvent e) {
-			    LifeTimeTable.notUniformlyDistributed(globalDataKeeper);
-			    
-			  } 
-		});
-		
-		notUniformlyDistributedButton.setVisible(false);
-		
-		lifeTimePanel.add(zoomInButton);
-		lifeTimePanel.add(undoButton);
-		lifeTimePanel.add(zoomOutButton);
-		lifeTimePanel.add(uniformlyDistributedButton);
-		lifeTimePanel.add(notUniformlyDistributedButton);
-		lifeTimePanel.add(showThisToPopup);
-
-		lifeTimePanel.add(zoomAreaLabel);
-		
-		lifeTimePanel.add(generalTableLabel);
-		
-		contentPane.setLayout(gl_contentPane);
 		
 		pack();
 		setBounds(30, 30, 1300, 700);
@@ -2525,7 +2539,7 @@ private void makeZoomAreaTableForCluster() {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+
 		
 	}
 	
@@ -2688,7 +2702,7 @@ private void makeZoomAreaTableForCluster() {
 			bw.close();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 		
@@ -2747,7 +2761,7 @@ private void makeZoomAreaTableForCluster() {
 			bw.close();
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		
 			e.printStackTrace();
 		}
 		

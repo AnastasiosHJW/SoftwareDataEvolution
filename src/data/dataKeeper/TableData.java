@@ -2,6 +2,8 @@ package data.dataKeeper;
 
 import java.util.ArrayList;
 
+import gui.tableElements.commons.JvTable;
+
 public class TableData {
 	
 	
@@ -36,7 +38,22 @@ public class TableData {
 	
 	private boolean showingPld=false;
 	
+	private JvTable zoomAreaTable = null;
+	private JvTable LifeTimeTable = null;
 	
+	
+	public JvTable getZoomAreaTable() {
+		return zoomAreaTable;
+	}
+	public void setZoomAreaTable(JvTable zoomAreaTable) {
+		this.zoomAreaTable = zoomAreaTable;
+	}
+	public JvTable getLifeTimeTable() {
+		return LifeTimeTable;
+	}
+	public void setLifeTimeTable(JvTable lifeTimeTable) {
+		LifeTimeTable = lifeTimeTable;
+	}
 	public String[] getFirstLevelUndoColumnsZoomArea() {
 		return firstLevelUndoColumnsZoomArea;
 	}
