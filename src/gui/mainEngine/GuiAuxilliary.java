@@ -114,9 +114,11 @@ public void makeGeneralTableIDU(final TableData tableData) {
 		
 		zoomModel=new MyTableModel(tableData.getFinalColumnsZoomArea(), rows);
 		
-		final JvTable generalTable=new JvTable(zoomModel);
+		//final JvTable generalTable=new JvTable(zoomModel);
+		tableData.setZoomAreaTable(new JvTable(zoomModel));
 		
-		generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		tableData.getZoomAreaTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		
 		if(tableData.getRowHeight()<1){
 			tableData.setRowHeight(1);
@@ -125,24 +127,24 @@ public void makeGeneralTableIDU(final TableData tableData) {
 			tableData.setColumnWidth(1);
 		}
 		
-		for(int i=0; i<generalTable.getRowCount(); i++){
-				generalTable.setRowHeight(i, tableData.getRowHeight());
+		for(int i=0; i<tableData.getZoomAreaTable().getRowCount(); i++){
+			tableData.getZoomAreaTable().setRowHeight(i, tableData.getRowHeight());
 				
 		}
 
 		
-		generalTable.setShowGrid(false);
-		generalTable.setIntercellSpacing(new Dimension(0, 0));
+		tableData.getZoomAreaTable().setShowGrid(false);
+		tableData.getZoomAreaTable().setIntercellSpacing(new Dimension(0, 0));
 		
 		
 		
-		for(int i=0; i<generalTable.getColumnCount(); i++){
+		for(int i=0; i<tableData.getZoomAreaTable().getColumnCount(); i++){
 			if(i==0){
-				generalTable.getColumnModel().getColumn(0).setPreferredWidth(tableData.getColumnWidth());
+				tableData.getZoomAreaTable().getColumnModel().getColumn(0).setPreferredWidth(tableData.getColumnWidth());
 				
 			}
 			else{
-				generalTable.getColumnModel().getColumn(i).setPreferredWidth(tableData.getColumnWidth());
+				tableData.getZoomAreaTable().getColumnModel().getColumn(i).setPreferredWidth(tableData.getColumnWidth());
 				
 			}
 		}
@@ -157,11 +159,11 @@ public void makeGeneralTableIDU(final TableData tableData) {
 
 		
 		if(tableData.getWholeCol()!=-1){
-			for(int i=0; i<generalTable.getColumnCount(); i++){
-				if(!(generalTable.getColumnName(i).equals("Table name"))){
-					if(Integer.parseInt(generalTable.getColumnName(i))>=start && Integer.parseInt(generalTable.getColumnName(i))<=end){
+			for(int i=0; i<tableData.getZoomAreaTable().getColumnCount(); i++){
+				if(!(tableData.getZoomAreaTable().getColumnName(i).equals("Table name"))){
+					if(Integer.parseInt(tableData.getZoomAreaTable().getColumnName(i))>=start && Integer.parseInt(tableData.getZoomAreaTable().getColumnName(i))<=end){
 			
-						generalTable.getColumnModel().getColumn(i).setHeaderRenderer(new IDUHeaderTableRenderer());
+						tableData.getZoomAreaTable().getColumnModel().getColumn(i).setHeaderRenderer(new IDUHeaderTableRenderer());
 			
 					}
 				}
@@ -173,12 +175,12 @@ public void makeGeneralTableIDU(final TableData tableData) {
 		
 		
 
-		generalTable.setDefaultRenderer(Object.class, new GeneralTableIDUDefaultTableCellRenderer(tableData, tableManager, clusterManager, descriptionText));
+		tableData.getZoomAreaTable().setDefaultRenderer(Object.class, new GeneralTableIDUDefaultTableCellRenderer(tableData, tableManager, clusterManager, descriptionText));
 		
-		generalTable.addMouseListener(new GeneralTableIDUMouseAdapter(tableData, tableData.getZoomAreaTable(), generalTable, renderer));
-		generalTable.getTableHeader().addMouseListener(new GeneralTableIDUHeaderMouseAdapter(tableData, generalTable,renderer));
+		tableData.getZoomAreaTable().addMouseListener(new GeneralTableIDUMouseAdapter(tableData, tableData.getZoomAreaTable(), tableData.getZoomAreaTable(), renderer));
+		tableData.getZoomAreaTable().getTableHeader().addMouseListener(new GeneralTableIDUHeaderMouseAdapter(tableData, tableData.getZoomAreaTable(),renderer));
 		
-		tableData.setZoomAreaTable(generalTable);
+		//tableData.setZoomAreaTable(generalTable);
 		tmpScrollPaneZoomArea.setViewportView(tableData.getZoomAreaTable());
 		tmpScrollPaneZoomArea.setAlignmentX(0);
 		tmpScrollPaneZoomArea.setAlignmentY(0);
@@ -214,28 +216,30 @@ public void makeGeneralTablePhases(final TableData tableData, final JTabbedPane 
 	
 	generalModel=new MyTableModel(tableData.getFinalColumns(), rows);
 	
-	final JvTable generalTable=new JvTable(generalModel);
+	//final JvTable generalTable=new JvTable(generalModel);
+	tableData.setLifeTimeTable(new JvTable(generalModel));
 	
-	generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	
-	generalTable.setShowGrid(false);
-	generalTable.setIntercellSpacing(new Dimension(0, 0));
+	tableData.getLifeTimeTable().setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+	
+	tableData.getLifeTimeTable().setShowGrid(false);
+	tableData.getLifeTimeTable().setIntercellSpacing(new Dimension(0, 0));
 
 	
 	
-	for(int i=0; i<generalTable.getColumnCount(); i++){
+	for(int i=0; i<tableData.getLifeTimeTable().getColumnCount(); i++){
 		if(i==0){
-			generalTable.getColumnModel().getColumn(0).setPreferredWidth(86);
+			tableData.getLifeTimeTable().getColumnModel().getColumn(0).setPreferredWidth(86);
 		}
 		else{
 			
-			generalTable.getColumnModel().getColumn(i).setPreferredWidth(1);
+			tableData.getLifeTimeTable().getColumnModel().getColumn(i).setPreferredWidth(1);
 		}
 	}
 	
-	generalTable.setDefaultRenderer(Object.class, new GeneralTablePhasesDefaultTableCellRenderer(tableData, tableManager, clusterManager, descriptionText));
+	tableData.getLifeTimeTable().setDefaultRenderer(Object.class, new GeneralTablePhasesDefaultTableCellRenderer(tableData, tableManager, clusterManager, descriptionText));
 
-	generalTable.addMouseListener(new MouseAdapter() {
+	tableData.getLifeTimeTable().addMouseListener(new MouseAdapter() {
 
 
 		@Override
@@ -252,17 +256,17 @@ public void makeGeneralTablePhases(final TableData tableData, final JTabbedPane 
 		   }
 	});
 	
-	generalTable.addMouseListener(new GeneralTablePhasesMouseAdapter(tableData, generalTable, showDetails, tableManager, clusterManager));
+	tableData.getLifeTimeTable().addMouseListener(new GeneralTablePhasesMouseAdapter(tableData, tableData.getLifeTimeTable(), showDetails, tableManager, clusterManager));
 
 	
-	generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
+	tableData.getLifeTimeTable().getTableHeader().addMouseListener(new MouseAdapter() {
 
 	    @Override
 	    public void mouseClicked(MouseEvent e) {
-	        tableData.setWholeCol(generalTable.columnAtPoint(e.getPoint()));
-	        String name = generalTable.getColumnName(tableData.getWholeCol());
+	        tableData.setWholeCol(tableData.getLifeTimeTable().columnAtPoint(e.getPoint()));
+	        String name = tableData.getLifeTimeTable().getColumnName(tableData.getWholeCol());
 	        System.out.println("Column index selected " + tableData.getWholeCol() + " " + name);
-	        generalTable.repaint();
+	        tableData.getLifeTimeTable().repaint();
 
 	        if (tableData.isShowingPld()) {
 		        makeGeneralTableIDU(tableData);
@@ -270,7 +274,7 @@ public void makeGeneralTablePhases(final TableData tableData, final JTabbedPane 
 	    }
 	});
 	
-	generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
+	tableData.getLifeTimeTable().getTableHeader().addMouseListener(new MouseAdapter() {
 
 	    @Override
 	    public void mouseReleased(MouseEvent e) {
@@ -284,7 +288,7 @@ public void makeGeneralTablePhases(final TableData tableData, final JTabbedPane 
 				            @Override
 				            public void actionPerformed(ActionEvent e) {
 				            	tableData.setWholeCol(-1);
-				            	generalTable.repaint();
+				            	tableData.getLifeTimeTable().repaint();
 
 				            	if(tableData.isShowingPld()){
 				            		makeGeneralTableIDU(tableData);
@@ -296,9 +300,9 @@ public void makeGeneralTablePhases(final TableData tableData, final JTabbedPane 
 				        
 				        
 				        
-				        showDetailsItem.addActionListener(new TableHeaderShowDetailsActionListener(tableData, tableManager, clusterManager, showDetails, generalTable));
+				        showDetailsItem.addActionListener(new TableHeaderShowDetailsActionListener(tableData, tableManager, clusterManager, showDetails, tableData.getLifeTimeTable()));
 				        popupMenu.add(showDetailsItem);
-				        popupMenu.show(generalTable, e.getX(),e.getY());
+				        popupMenu.show(tableData.getLifeTimeTable(), e.getX(),e.getY());
 
 				    
 			}
@@ -308,7 +312,7 @@ public void makeGeneralTablePhases(final TableData tableData, final JTabbedPane 
 	});
 	
 	
-	tableData.setLifeTimeTable(generalTable);
+	//tableData.setLifeTimeTable(generalTable);
 	
 	tmpScrollPane.setViewportView(tableData.getLifeTimeTable());
 	tmpScrollPane.setAlignmentX(0);

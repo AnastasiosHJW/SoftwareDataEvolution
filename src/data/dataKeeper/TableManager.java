@@ -134,7 +134,7 @@ public class TableManager {
 		this.projectDataFolder = projectDataFolder;
 	}
 	
-	public void fillTable(ClusterManager clusterManager, TreeManager treeManager, TableData tableData, JTabbedPane tabbedPane, GuiAux aux, String inputCsv, String outputAssessment1, String outputAssessment2, String projectName) {
+	public void fillTable(ClusterManager clusterManager, TreeManager treeManager, TableData tableData, JTabbedPane tabbedPane, GuiAuxilliary aux, String inputCsv, String outputAssessment1, String outputAssessment2, String projectName) {
 		TableConstructionIDU table=new TableConstructionIDU(allPPLSchemas, allPPLTransitions);
 		final String[] columns=table.constructColumns();
 		final String[][] rows=table.constructRows();

@@ -545,7 +545,7 @@ public class Gui extends JFrame implements ActionListener{
 					
 
 					
-					globalManager.importData(fileName, treeManager, tableData ,aux2, tabbedPane);
+					globalManager.importData(fileName, treeManager, tableData ,aux, tabbedPane);
 					System.out.println("Data imported");
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(null, "Something seems wrong with this file");

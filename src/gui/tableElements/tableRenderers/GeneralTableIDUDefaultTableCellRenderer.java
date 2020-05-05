@@ -32,30 +32,27 @@ public class GeneralTableIDUDefaultTableCellRenderer extends DefaultTableCellRen
     {
         final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         
-        //System.out.println(row + " " + column);
-        //System.out.println(tableData.getFinalRows().length + " " + tableData.getFinalRows()[row].length);
-        
-        String tmpValue=tableData.getFinalRows()[row][column];
+        String tmpValue=tableData.getFinalRowsZoomArea()[row][column];
         String columnName=table.getColumnName(column);
         Color fr=new Color(0,0,0);
-        c.setForeground(fr);
         
-        if(column==tableData.getWholeCol() && tableData.getWholeCol()!=0){
+        c.setForeground(fr);
+        setOpaque(true);
+      
+        if(column==tableData.getWholeColZoomArea() && tableData.getWholeColZoomArea()!=0){
         	
-        	String description=table.getColumnName(column)+"\n";
-          	description=description+"First Transition ID:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-    				get(column-1).getStartPos()+"\n";
-    		description=description+"Last Transition ID:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-    				get(column-1).getEndPos()+"\n";
-    		description=description+"Total Changes For This Phase:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-    				get(column-1).getTotalUpdates()+"\n";
-    		description=description+"Additions For This Phase:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-    				get(column-1).getTotalAdditionsOfPhase()+"\n";
-    		description=description+"Deletions For This Phase:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-    				get(column-1).getTotalDeletionsOfPhase()+"\n";
-    		description=description+"Updates For This Phase:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-    				get(column-1).getTotalUpdatesOfPhase()+"\n";
-        	
+        	String description="Transition ID:"+table.getColumnName(column)+"\n";
+        	description=description+"Old Version Name:"+tableManager.getAllPPLTransitions().
+    				get(Integer.parseInt(table.getColumnName(column))).getOldVersionName()+"\n";
+    		description=description+"New Version Name:"+tableManager.getAllPPLTransitions().
+    				get(Integer.parseInt(table.getColumnName(column))).getNewVersionName()+"\n";		        		
+    		
+			description=description+"Transition Changes:"+tableManager.getAllPPLTransitions().get(Integer.parseInt(table.getColumnName(column))).getNumberOfChangesForOneTr()+"\n";
+			description=description+"Additions:"+tableManager.getAllPPLTransitions().get(Integer.parseInt(table.getColumnName(column))).getNumberOfAdditionsForOneTr()+"\n";
+			description=description+"Deletions:"+tableManager.getAllPPLTransitions().get(Integer.parseInt(table.getColumnName(column))).getNumberOfDeletionsForOneTr()+"\n";
+			description=description+"Updates:"+tableManager.getAllPPLTransitions().get(Integer.parseInt(table.getColumnName(column))).getNumberOfUpdatesForOneTr()+"\n";
+
+			
     		descriptionText.setText(description);
         	
         	Color cl = new Color(255,69,0,100);
@@ -63,42 +60,32 @@ public class GeneralTableIDUDefaultTableCellRenderer extends DefaultTableCellRen
     		c.setBackground(cl);
     		return c;
         }
-        else if(tableData.getSelectedColumn()==0){
+        else if(tableData.getSelectedColumnZoomArea()==0){
+    		
         	if (isSelected){
-        		
-        		if(tableData.getFinalRows()[row][0].contains("Cluster")){
-	        		String description="Cluster:"+tableData.getFinalRows()[row][0]+"\n";
-	        		description=description+"Birth Version Name:"+clusterManager.getClusterCollectors().get(0).getClusters().get(row).getBirthSqlFile()+"\n";
-	        		description=description+"Birth Version ID:"+clusterManager.getClusterCollectors().get(0).getClusters().get(row).getBirth()+"\n";
-	        		description=description+"Death Version Name:"+clusterManager.getClusterCollectors().get(0).getClusters().get(row).getDeathSqlFile()+"\n";
-	        		description=description+"Death Version ID:"+clusterManager.getClusterCollectors().get(0).getClusters().get(row).getDeath()+"\n";
-	        		description=description+"Tables:"+clusterManager.getClusterCollectors().get(0).getClusters().get(row).getNamesOfTables().size()+"\n";
-	        		description=description+"Total Changes:"+clusterManager.getClusterCollectors().get(0).getClusters().get(row).getTotalChanges()+"\n";
-	        		
-	        		descriptionText.setText(description);
-        		}
-        		else{
-	        		String description="Table:"+tableData.getFinalRows()[row][0]+"\n";
-	        		description=description+"Birth Version Name:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getBirth()+"\n";
-	        		description=description+"Birth Version ID:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getBirthVersionID()+"\n";
-	        		description=description+"Death Version Name:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getDeath()+"\n";
-	        		description=description+"Death Version ID:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getDeathVersionID()+"\n";
-	        		description=description+"Total Changes:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getTotalChanges()+"\n";
-	        		descriptionText.setText(description);
-
-        		}
-
-        		
-        		
         		Color cl = new Color(255,69,0,100);
-        		
         		c.setBackground(cl);
+        		
+        		String description="Table:"+tableData.getFinalRowsZoomArea()[row][0]+"\n";
+        		description=description+"Birth Version Name:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).getBirth()+"\n";
+        		description=description+"Birth Version ID:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).getBirthVersionID()+"\n";
+        		description=description+"Death Version Name:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).getDeath()+"\n";
+        		description=description+"Death Version ID:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).getDeathVersionID()+"\n";
+        		description=description+"Total Changes:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).getTotalChanges()+"\n";
+
+        		
+        		descriptionText.setText(description);
+        		
         		return c;
+        		
+        		
         	}
         }
         else{
-        	
-        	if(tableData.getSelectedFromTree().contains(tableData.getFinalRows()[row][0])){
+
+
+        	if(tableData.getSelectedFromTree().contains(tableData.getFinalRowsZoomArea()[row][0])){
+
 
         		Color cl = new Color(255,69,0,100);
         		
@@ -107,51 +94,50 @@ public class GeneralTableIDUDefaultTableCellRenderer extends DefaultTableCellRen
         		return c;
         	}
         	
+	      
+        	
         	if (isSelected && hasFocus){
-	        	
+
         		String description="";
         		if(!table.getColumnName(column).contains("Table name")){
-        			
-	        		if(tableData.getFinalRows()[row][0].contains("Cluster")){
-
-		        		description=tableData.getFinalRows()[row][0]+"\n";
-		        		description=description+"Tables:"+clusterManager.getClusterCollectors().get(0).getClusters().get(row).getNamesOfTables().size()+"\n\n";
-
-		        		description=description+table.getColumnName(column)+"\n";
-		        		description=description+"First Transition ID:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-		        				get(column-1).getStartPos()+"\n";
-		        		description=description+"Last Transition ID:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-		        				get(column-1).getEndPos()+"\n\n";
-		        		description=description+"Total Changes For This Phase:"+tmpValue+"\n";
-		        		
+	        		description="Table:"+tableData.getFinalRowsZoomArea()[row][0]+"\n";
+	        		
+	        		description=description+"Old Version Name:"+tableManager.getAllPPLTransitions().
+	        				get(Integer.parseInt(table.getColumnName(column))).getOldVersionName()+"\n";
+	        		description=description+"New Version Name:"+tableManager.getAllPPLTransitions().
+	        				get(Integer.parseInt(table.getColumnName(column))).getNewVersionName()+"\n";		        		
+	        		if(tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).
+	        				getTableChanges().getTableAtChForOneTransition(Integer.parseInt(table.getColumnName(column)))!=null){
+	        			description=description+"Transition Changes:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).
+	        				getTableChanges().getTableAtChForOneTransition(Integer.parseInt(table.getColumnName(column))).size()+"\n";
+	        			description=description+"Additions:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).
+	        					getNumberOfAdditionsForOneTr(Integer.parseInt(table.getColumnName(column)))+"\n";
+	        			description=description+"Deletions:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).
+	        					getNumberOfDeletionsForOneTr(Integer.parseInt(table.getColumnName(column)))+"\n";
+	        			description=description+"Updates:"+tableManager.getAllPPLTables().get(tableData.getFinalRowsZoomArea()[row][0]).
+	        					getNumberOfUpdatesForOneTr(Integer.parseInt(table.getColumnName(column)))+"\n";
+	        			
 	        		}
 	        		else{
-	        			description=table.getColumnName(column)+"\n";
-		        		description=description+"First Transition ID:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-		        				get(column-1).getStartPos()+"\n";
-		        		description=description+"Last Transition ID:"+clusterManager.getPhaseCollectors().get(0).getPhases().
-		        				get(column-1).getEndPos()+"\n\n";
-	        			description=description+"Table:"+tableData.getFinalRows()[row][0]+"\n";
-		        		description=description+"Birth Version Name:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getBirth()+"\n";
-		        		description=description+"Birth Version ID:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getBirthVersionID()+"\n";
-		        		description=description+"Death Version Name:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getDeath()+"\n";
-		        		description=description+"Death Version ID:"+tableManager.getAllPPLTables().get(tableData.getFinalRows()[row][0]).getDeathVersionID()+"\n";
-		        		description=description+"Total Changes For This Phase:"+tmpValue+"\n";
-		        		
+	        			description=description+"Transition Changes:0"+"\n";
+	        			description=description+"Additions:0"+"\n";
+	        			description=description+"Deletions:0"+"\n";
+	        			description=description+"Updates:0"+"\n";
+	        			
 	        		}
 	        		
 	        		descriptionText.setText(description);
-
         		}
-        		
         		Color cl = new Color(255,69,0,100);
         		
         		c.setBackground(cl);
+        		
         		return c;
 	        }
         	
+        	
+        	
         }
-
 
         try{
         	int numericValue=Integer.parseInt(tmpValue);
@@ -162,14 +148,14 @@ public class GeneralTableIDUDefaultTableCellRenderer extends DefaultTableCellRen
     		if(numericValue==0){
     			insersionColor=new Color(154,205,50,200);
     		}
-    		else if(numericValue> 0&& numericValue<=tableData.getSegmentSize()[3]){
+    		else if(numericValue> 0&& numericValue<=tableData.getSegmentSizeZoomArea()[3]){
     			
     			insersionColor=new Color(176,226,255);
         	}
-    		else if(numericValue>tableData.getSegmentSize()[3] && numericValue<=2*tableData.getSegmentSize()[3]){
+    		else if(numericValue>tableData.getSegmentSizeZoomArea()[3] && numericValue<=2*tableData.getSegmentSizeZoomArea()[3]){
     			insersionColor=new Color(92,172,238);
     		}
-    		else if(numericValue>2*tableData.getSegmentSize()[3] && numericValue<=3*tableData.getSegmentSize()[3]){
+    		else if(numericValue>2*tableData.getSegmentSizeZoomArea()[3] && numericValue<=3*tableData.getSegmentSizeZoomArea()[3]){
     			
     			insersionColor=new Color(28,134,238);
     		}
@@ -183,9 +169,8 @@ public class GeneralTableIDUDefaultTableCellRenderer extends DefaultTableCellRen
         catch(Exception e){
         		
 
-        	
     		if(tmpValue.equals("")){
-    			c.setBackground(Color.gray);
+    			c.setBackground(Color.GRAY);
     			return c; 
     		}
     		else{

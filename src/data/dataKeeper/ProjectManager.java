@@ -43,7 +43,7 @@ public class ProjectManager {
 
 
 
-	public void importData(String fileName, TableManager tableManager, ClusterManager clusterManager, TreeManager treeManager, TableData tableData, GuiAux aux, JTabbedPane tabbedPane) throws IOException, RecognitionException {
+	public void importData(String fileName, TableManager tableManager, ClusterManager clusterManager, TreeManager treeManager, TableData tableData, GuiAuxilliary aux, JTabbedPane tabbedPane) throws IOException, RecognitionException {
 		
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		

@@ -23,7 +23,7 @@ public class GlobalManager {
 		projectManager = new ProjectManager();
 	}
 	
-	public void importData(String fileName, TreeManager treeManager, TableData tableData, GuiAux aux, JTabbedPane tabbedPane) throws RecognitionException, IOException
+	public void importData(String fileName, TreeManager treeManager, TableData tableData, GuiAuxilliary aux, JTabbedPane tabbedPane) throws RecognitionException, IOException
 	{
 		projectManager.importData(fileName, tableManager, clusterManager, treeManager, tableData, aux, tabbedPane);
 	}
