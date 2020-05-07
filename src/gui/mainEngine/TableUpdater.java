@@ -24,7 +24,7 @@ import data.dataKeeper.ClusterManager;
 import data.dataKeeper.TableData;
 import data.dataKeeper.TableManager;
 import data.dataSorters.PldRowSorter;
-import gui.listeners.*;
+import gui.listeners.tables.*;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.commons.ShowDetailsComponents;
@@ -33,7 +33,7 @@ import gui.tableElements.tableRenderers.GeneralTablePhasesDefaultTableCellRender
 import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
 import gui.tableElements.tableRenderers.IDUTableRenderer;
 
-public class GuiAuxilliary {
+public class TableUpdater {
 	
 	private JButton zoomInButton;
 	private JButton zoomOutButton;
@@ -61,7 +61,7 @@ public class GuiAuxilliary {
 		this.showDetails = showDetails;
 	}
 	
-	public GuiAuxilliary(JScrollPane tmpScrollPaneZoomArea,JScrollPane tmpScrollPane, JPanel lifeTimePanel, MyTableModel zoomModel,MyTableModel generalModel, JTextArea descriptionText) 
+	public TableUpdater(JScrollPane tmpScrollPaneZoomArea,JScrollPane tmpScrollPane, JPanel lifeTimePanel, MyTableModel zoomModel,MyTableModel generalModel, JTextArea descriptionText) 
 	{
 		this.tmpScrollPaneZoomArea = tmpScrollPaneZoomArea;
 		this.tmpScrollPane = tmpScrollPane;
@@ -85,6 +85,12 @@ public class GuiAuxilliary {
 	{
 		this.tableManager = tableManager;
 		this.clusterManager = clusterManager;
+	}
+	
+	public void setButtonsVisible()
+	{
+		zoomInButton.setVisible(true);
+		zoomOutButton.setVisible(true);
 	}
 
 public void makeGeneralTableIDU(final TableData tableData) {
@@ -196,7 +202,7 @@ public void makeGeneralTableIDU(final TableData tableData) {
 	}
 
 
-public void makeGeneralTablePhases(final TableData tableData, final JTabbedPane tabbedPane) {
+public void makeGeneralTablePhases(final TableData tableData) {
 	uniformlyDistributedButton.setVisible(true);
 	
 	notUniformlyDistributedButton.setVisible(true);

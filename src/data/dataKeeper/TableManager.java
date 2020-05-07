@@ -14,8 +14,7 @@ import data.dataPPL.pplTransition.AtomicChange;
 import data.dataPPL.pplTransition.PPLTransition;
 import data.dataPPL.pplTransition.TableChange;
 import data.dataProccessing.Worker;
-import gui.mainEngine.GuiAux;
-import gui.mainEngine.GuiAuxilliary;
+import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
 import gui.tableElements.tableConstructors.TableConstructionIDU;
 import gui.tableElements.tableConstructors.TableConstructionWithClusters;
@@ -134,7 +133,7 @@ public class TableManager {
 		this.projectDataFolder = projectDataFolder;
 	}
 	
-	public void fillTable(ClusterManager clusterManager, TreeManager treeManager, TableData tableData, JTabbedPane tabbedPane, GuiAuxilliary aux, String inputCsv, String outputAssessment1, String outputAssessment2, String projectName) {
+	public void fillTable(ClusterManager clusterManager, TreeManager treeManager, TableData tableData, JTabbedPane tabbedPane, TableUpdater aux, String inputCsv, String outputAssessment1, String outputAssessment2, String projectName) {
 		TableConstructionIDU table=new TableConstructionIDU(allPPLSchemas, allPPLTransitions);
 		final String[] columns=table.constructColumns();
 		final String[][] rows=table.constructRows();
@@ -197,7 +196,7 @@ public class TableManager {
 			
 			if (aux != null && treeManager != null && tabbedPane != null) {
 				tabbedPane.setSelectedIndex(0);
-				aux.makeGeneralTablePhases(tableData, tabbedPane);
+				aux.makeGeneralTablePhases(tableData);
 				treeManager.fillClustersTree(clusterManager);
 			}
 			

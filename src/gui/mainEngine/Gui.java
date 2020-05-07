@@ -5,16 +5,11 @@ import gui.dialogs.CreateProjectJDialog;
 import gui.dialogs.EnlargeTable;
 import gui.dialogs.ParametersJDialog;
 import gui.dialogs.ProjectInfoDialog;
+import gui.listeners.menu.*;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.commons.ShowDetailsComponents;
-import gui.tableElements.tableConstructors.PldConstruction;
-import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
-import gui.tableElements.tableConstructors.TableConstructionClusterTablesPhasesZoomA;
-import gui.tableElements.tableConstructors.TableConstructionIDU;
-import gui.tableElements.tableConstructors.TableConstructionPhases;
-import gui.tableElements.tableConstructors.TableConstructionWithClusters;
-import gui.tableElements.tableConstructors.TableConstructionZoomArea;
+import gui.tableElements.tableConstructors.*;
 import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
 import gui.tableElements.tableRenderers.IDUTableRenderer;
 import gui.treeElements.TreeConstructionGeneral;
@@ -459,20 +454,16 @@ public class Gui extends JFrame implements ActionListener{
 		
 		globalManager = new GlobalManager();
 		
-		final GuiAuxilliary aux = new GuiAuxilliary(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
+		final TableUpdater tableUpdater = new TableUpdater(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
 				zoomModel, generalModel, descriptionText);
-		aux.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
+		tableUpdater.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
 		treeManager = new TreeManager(treeLabel, tablesTree, sideMenu, tablesTreePanel,
  treeScrollPane, selectedFromTree,  tableData);
-		aux.setShowDetails(showDetails);
+		tableUpdater.setShowDetails(showDetails);
 		
 		tableData = new TableData();
-		aux.setManagers(globalManager.getTableManager(),globalManager.getClusterManager());
+		tableUpdater.setManagers(globalManager.getTableManager(),globalManager.getClusterManager());
 		
-		final GuiAux aux2 = new GuiAux(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
-				zoomAreaTable, zoomModel, generalModel, descriptionText);
-		aux2.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
-		aux2.setManagers(globalManager.getTableManager(),globalManager.getClusterManager());
 		
 		JMenuItem mntmCreateProject = new JMenuItem("Create Project");
 		mntmCreateProject.addActionListener(new ActionListener() {
@@ -496,7 +487,7 @@ public class Gui extends JFrame implements ActionListener{
 		            System.out.println("!!"+project);
 		          
 					try {
-						importData(fileName);
+						globalManager.importData(fileName, treeManager, tableData, tableUpdater, tabbedPane);
 					} catch (IOException e) {
 						JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
 						return;
@@ -545,7 +536,7 @@ public class Gui extends JFrame implements ActionListener{
 					
 
 					
-					globalManager.importData(fileName, treeManager, tableData ,aux, tabbedPane);
+					globalManager.importData(fileName, treeManager, tableData ,tableUpdater, tabbedPane);
 					System.out.println("Data imported");
 				} catch (IOException e) {
 					JOptionPane.showMessageDialog(null, "Something seems wrong with this file");
@@ -686,31 +677,7 @@ public class Gui extends JFrame implements ActionListener{
 		});
 		
 		JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");
-		mntmShowGeneralLifetimeIDU.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				 if(!(currentProject==null)){
-					zoomInButton.setVisible(true);
-					zoomOutButton.setVisible(true);
-					TableConstructionIDU table=new TableConstructionIDU(globalDataKeeper);
-					final String[] columns=table.constructColumns();
-					final String[][] rows=table.constructRows();
-					segmentSizeZoomArea = table.getSegmentSize();
-					System.out.println("Schemas: "+globalDataKeeper.getAllPPLSchemas().size());
-					System.out.println("C: "+columns.length+" R: "+rows.length);
-
-					finalColumnsZoomArea=columns;
-					finalRowsZoomArea=rows;
-					tabbedPane.setSelectedIndex(0);
-					makeGeneralTableIDU();
-					fillTree();
-					
-				}
-				else{
-					JOptionPane.showMessageDialog(null, "Select a Project first");
-					return;
-				}
-			}
-		});
+		mntmShowGeneralLifetimeIDU.addActionListener(new ShowPLDActionListener(tableUpdater, tableData, globalManager, treeManager, tabbedPane));
 		mnTable.add(mntmShowGeneralLifetimeIDU);
 		
 		JMenuItem mntmShowGeneralLifetimePhasesPLD = new JMenuItem("Show Phases PLD");

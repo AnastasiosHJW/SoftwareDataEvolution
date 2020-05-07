@@ -8,8 +8,7 @@ import javax.swing.JTabbedPane;
 
 import org.antlr.v4.runtime.RecognitionException;
 
-import gui.mainEngine.GuiAux;
-import gui.mainEngine.GuiAuxilliary;
+import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
 import gui.tableElements.commons.MyTableModel;
 
@@ -23,27 +22,10 @@ public class ProjectManager {
 	
 	private String transitionsFile;
 	private String currentProject;
-	
-	public ProjectManager()
-	{
-		
-	}
-	
-	public ProjectManager(String projectName, String datasetTxt, String inputCsv, String outputAssessment1,
-			String outputAssessment2, String transitionsFile, String currentProject) {
-		super();
-		this.projectName = projectName;
-		this.datasetTxt = datasetTxt;
-		this.inputCsv = inputCsv;
-		this.outputAssessment1 = outputAssessment1;
-		this.outputAssessment2 = outputAssessment2;
-		this.transitionsFile = transitionsFile;
-		this.currentProject = currentProject;
-	}
 
 
 
-	public void importData(String fileName, TableManager tableManager, ClusterManager clusterManager, TreeManager treeManager, TableData tableData, GuiAuxilliary aux, JTabbedPane tabbedPane) throws IOException, RecognitionException {
+	public void importData(String fileName, TableManager tableManager, ClusterManager clusterManager, TreeManager treeManager, TableData tableData, TableUpdater aux, JTabbedPane tabbedPane) throws IOException, RecognitionException {
 		
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		
@@ -108,5 +90,91 @@ public class ProjectManager {
 
 		currentProject=fileName;
 	}
+
+
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+
+
+	public String getDatasetTxt() {
+		return datasetTxt;
+	}
+
+
+
+	public void setDatasetTxt(String datasetTxt) {
+		this.datasetTxt = datasetTxt;
+	}
+
+
+
+	public String getInputCsv() {
+		return inputCsv;
+	}
+
+
+
+	public void setInputCsv(String inputCsv) {
+		this.inputCsv = inputCsv;
+	}
+
+
+
+	public String getOutputAssessment1() {
+		return outputAssessment1;
+	}
+
+
+
+	public void setOutputAssessment1(String outputAssessment1) {
+		this.outputAssessment1 = outputAssessment1;
+	}
+
+
+
+	public String getOutputAssessment2() {
+		return outputAssessment2;
+	}
+
+
+
+	public void setOutputAssessment2(String outputAssessment2) {
+		this.outputAssessment2 = outputAssessment2;
+	}
+
+
+
+	public String getTransitionsFile() {
+		return transitionsFile;
+	}
+
+
+
+	public void setTransitionsFile(String transitionsFile) {
+		this.transitionsFile = transitionsFile;
+	}
+
+
+
+	public String getCurrentProject() {
+		return currentProject;
+	}
+
+
+
+	public void setCurrentProject(String currentProject) {
+		this.currentProject = currentProject;
+	}
+	
+	
 	
 }

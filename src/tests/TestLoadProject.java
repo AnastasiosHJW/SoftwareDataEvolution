@@ -19,7 +19,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import data.dataKeeper.*;
-import gui.mainEngine.GuiAuxilliary;
+import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
@@ -85,7 +85,7 @@ public class TestLoadProject {
 			
 			try {
 				TreeManager treeManager = null;
-				GuiAuxilliary aux = null;
+				TableUpdater aux = null;
 				JTabbedPane tab = null;
 				projectManager.importData(fileName[i], new TableManager(), new ClusterManager(), treeManager, new TableData() ,aux, tab);
 				//projectManager.importDataTest(fileName[i], new TableManager(), new ClusterManager(), new TableData());

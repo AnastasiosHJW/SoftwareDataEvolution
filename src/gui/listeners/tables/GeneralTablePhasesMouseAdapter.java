@@ -1,4 +1,4 @@
-package gui.listeners;
+package gui.listeners.tables;
 
 import java.awt.Color;
 import java.awt.Component;

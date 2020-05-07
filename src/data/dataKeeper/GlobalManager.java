@@ -6,8 +6,7 @@ import javax.swing.JTabbedPane;
 
 import org.antlr.v4.runtime.RecognitionException;
 
-import gui.mainEngine.GuiAux;
-import gui.mainEngine.GuiAuxilliary;
+import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
 
 public class GlobalManager {
@@ -23,7 +22,7 @@ public class GlobalManager {
 		projectManager = new ProjectManager();
 	}
 	
-	public void importData(String fileName, TreeManager treeManager, TableData tableData, GuiAuxilliary aux, JTabbedPane tabbedPane) throws RecognitionException, IOException
+	public void importData(String fileName, TreeManager treeManager, TableData tableData, TableUpdater aux, JTabbedPane tabbedPane) throws RecognitionException, IOException
 	{
 		projectManager.importData(fileName, tableManager, clusterManager, treeManager, tableData, aux, tabbedPane);
 	}

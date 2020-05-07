@@ -1,4 +1,4 @@
-package gui.listeners;
+package gui.listeners.tables;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
