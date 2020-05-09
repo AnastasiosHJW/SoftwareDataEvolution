@@ -520,22 +520,8 @@ public class Gui extends JFrame implements ActionListener{
 		menuBar.add(mnTable);
 		
 		JMenuItem mntmShowLifetimeTable = new JMenuItem("Show Full Detailed LifeTime Table");
-		mntmShowLifetimeTable.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(!(currentProject==null)){
-					TableConstructionAllSquaresIncluded table=new TableConstructionAllSquaresIncluded(globalDataKeeper);
-					final String[] columns=table.constructColumns();
-					final String[][] rows=table.constructRows();
-					segmentSizeDetailedTable=table.getSegmentSize();
-					tabbedPane.setSelectedIndex(0);
-					makeDetailedTable(columns,rows,true);
-				}
-				else{
-					JOptionPane.showMessageDialog(null, "Select a Project first");
-					return;
-				}
-			}
-		});
+		mntmShowLifetimeTable.addActionListener(new ShowLifetimeTableActionListener(tabbedPane, globalDataKeeper, currentProject, Gui.this));
+		mnFile.add(mntmShowLifetimeTable);
 		
 		JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");
 		mntmShowGeneralLifetimeIDU.addActionListener(new ShowPLDActionListener(tableUpdater, tableData, globalManager, treeManager, tabbedPane));
@@ -2127,7 +2113,7 @@ private void makeZoomAreaTableForCluster() {
 	
 }
 
-	private void makeDetailedTable(String[] columns , String[][] rows, final boolean levelized){
+	public void makeDetailedTable(String[] columns , String[][] rows, final boolean levelized){
 		
 		detailedModel=new MyTableModel(columns,rows);
 		
@@ -2218,14 +2204,14 @@ private void makeZoomAreaTableForCluster() {
 		        		if(numericValue==0){
 		        			insersionColor=new Color(255,231,186);
 		        		}
-		        		else if(numericValue>0 && numericValue<=segmentSizeDetailedTable[0]){
+		        		else if(numericValue>0 && numericValue<=getSegmentSizeDetailedTable()[0]){
 		        			
 		        			insersionColor=new Color(193,255,193);
 			        	}
-		        		else if(numericValue>segmentSizeDetailedTable[0] && numericValue<=2*segmentSizeDetailedTable[0]){
+		        		else if(numericValue>getSegmentSizeDetailedTable()[0] && numericValue<=2*getSegmentSizeDetailedTable()[0]){
 		        			insersionColor=new Color(84,255,159);
 		        		}
-		        		else if(numericValue>2*segmentSizeDetailedTable[0] && numericValue<=3*segmentSizeDetailedTable[0]){
+		        		else if(numericValue>2*getSegmentSizeDetailedTable()[0] && numericValue<=3*getSegmentSizeDetailedTable()[0]){
 		        			
 		        			insersionColor=new Color(0,201,87);
 		        		}
@@ -2239,14 +2225,14 @@ private void makeZoomAreaTableForCluster() {
 		        		if(numericValue==0){
 		        			insersionColor=new Color(255,231,186);
 		        		}
-		        		else if(numericValue>0 && numericValue<=segmentSizeDetailedTable[1]){
+		        		else if(numericValue>0 && numericValue<=getSegmentSizeDetailedTable()[1]){
 		        			
 		        			insersionColor=new Color(176,226,255);
 			        	}
-		        		else if(numericValue>segmentSizeDetailedTable[1] && numericValue<=2*segmentSizeDetailedTable[1]){
+		        		else if(numericValue>getSegmentSizeDetailedTable()[1] && numericValue<=2*getSegmentSizeDetailedTable()[1]){
 		        			insersionColor=new Color(92,172,238);
 		        		}
-		        		else if(numericValue>2*segmentSizeDetailedTable[1] && numericValue<=3*segmentSizeDetailedTable[1]){
+		        		else if(numericValue>2*getSegmentSizeDetailedTable()[1] && numericValue<=3*getSegmentSizeDetailedTable()[1]){
 		        			
 		        			insersionColor=new Color(28,134,238);
 		        		}
@@ -2260,14 +2246,14 @@ private void makeZoomAreaTableForCluster() {
 		        		if(numericValue==0){
 		        			insersionColor=new Color(255,231,186);
 		        		}
-		        		else if(numericValue>0 && numericValue<=segmentSizeDetailedTable[2]){
+		        		else if(numericValue>0 && numericValue<=getSegmentSizeDetailedTable()[2]){
 		        			
 		        			insersionColor=new Color(255,106,106);
 			        	}
-		        		else if(numericValue>segmentSizeDetailedTable[2] && numericValue<=2*segmentSizeDetailedTable[2]){
+		        		else if(numericValue>getSegmentSizeDetailedTable()[2] && numericValue<=2*getSegmentSizeDetailedTable()[2]){
 		        			insersionColor=new Color(255,0,0);
 		        		}
-		        		else if(numericValue>2*segmentSizeDetailedTable[2] && numericValue<=3*segmentSizeDetailedTable[2]){
+		        		else if(numericValue>2*getSegmentSizeDetailedTable()[2] && numericValue<=3*getSegmentSizeDetailedTable()[2]){
 		        			
 		        			insersionColor=new Color(205,0,0);
 		        		}
@@ -2769,6 +2755,15 @@ private void makeZoomAreaTableForCluster() {
 	public void setDescription(String descr){
 		descriptionText.setText(descr);
 	}
+
+	public Integer[] getSegmentSizeDetailedTable() {
+		return segmentSizeDetailedTable;
+	}
+
+	public void setSegmentSizeDetailedTable(Integer[] segmentSizeDetailedTable) {
+		this.segmentSizeDetailedTable = segmentSizeDetailedTable;
+	}
+
 
 		
 	
