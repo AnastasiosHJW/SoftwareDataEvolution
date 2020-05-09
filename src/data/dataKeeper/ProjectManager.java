@@ -22,6 +22,8 @@ public class ProjectManager {
 	
 	private String transitionsFile;
 	private String currentProject;
+	
+	private String project;
 
 
 
@@ -173,6 +175,18 @@ public class ProjectManager {
 
 	public void setCurrentProject(String currentProject) {
 		this.currentProject = currentProject;
+	}
+
+
+
+	public String getProject() {
+		return project;
+	}
+
+
+
+	public void setProject(String project) {
+		this.project = project;
 	}
 	
 	

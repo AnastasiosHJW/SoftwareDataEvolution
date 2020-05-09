@@ -9,6 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import phaseAnalyzer.commons.Phase;
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataKeeper.GlobalManager;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplTransition.PPLTransition;
 import data.dataPPL.pplTransition.TableChange;
@@ -16,9 +17,15 @@ import data.dataPPL.pplTransition.TableChange;
 public class TreeConstructionPhases implements TreeConstruction {
 	
 	private GlobalDataKeeper dataKeeper=null;
+	private GlobalManager globalManager = null;
 
 	public TreeConstructionPhases(GlobalDataKeeper dataKeeper) {
 		this.dataKeeper=dataKeeper;
+	}
+	
+	public TreeConstructionPhases(GlobalManager globalManager)
+	{
+		this.globalManager = globalManager;
 	}
 	
 	@Override
@@ -28,7 +35,7 @@ public class TreeConstructionPhases implements TreeConstruction {
 		TreeMap<String, PPLSchema> schemas=new TreeMap<String, PPLSchema>();
 		
 				
-		ArrayList<Phase> phases=dataKeeper.getPhaseCollectors().get(0).getPhases();
+		ArrayList<Phase> phases=globalManager.getClusterManager().getPhaseCollectors().get(0).getPhases();
 		
 		for(int i=0; i<phases.size(); i++){
 			
@@ -45,8 +52,8 @@ public class TreeConstructionPhases implements TreeConstruction {
 				}
 				a.add(a1);
 
-				schemas.put(tr.getValue().getOldVersionName(),dataKeeper.getAllPPLSchemas().get(tr.getValue().getOldVersionName()));
-				schemas.put(tr.getValue().getNewVersionName(),dataKeeper.getAllPPLSchemas().get(tr.getValue().getNewVersionName()));
+				schemas.put(tr.getValue().getOldVersionName(),globalManager.getTableManager().getAllPPLSchemas().get(tr.getValue().getOldVersionName()));
+				schemas.put(tr.getValue().getNewVersionName(),globalManager.getTableManager().getAllPPLSchemas().get(tr.getValue().getNewVersionName()));
 			}
 			
 		}

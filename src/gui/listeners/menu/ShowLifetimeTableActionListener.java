@@ -7,34 +7,34 @@ import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataKeeper.GlobalManager;
+import data.dataKeeper.TableData;
 import gui.mainEngine.Gui;
 import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 
 public class ShowLifetimeTableActionListener implements ActionListener {
 
 	private JTabbedPane tabbedPane;
-	private GlobalDataKeeper globalDataKeeper;
-	private String currentProject;
-	private Gui gui;
+	private GlobalManager globalManager;
+	private TableData tableData;
 
-	public ShowLifetimeTableActionListener(JTabbedPane tabbedPane, GlobalDataKeeper globalDataKeeper, String currentProject, Gui gui) {
+	public ShowLifetimeTableActionListener(JTabbedPane tabbedPane, GlobalManager globalManager, TableData tableData) {
 		super();
 		this.tabbedPane = tabbedPane;
-		this.globalDataKeeper = globalDataKeeper;
-		this.currentProject = currentProject;
-		this.gui = gui;		
+		this.globalManager = globalManager;
+		this.tableData = tableData;		
 	}
 	
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(!(currentProject==null)){
-			TableConstructionAllSquaresIncluded table=new TableConstructionAllSquaresIncluded(globalDataKeeper);
+		if(!(globalManager.getProjectManager().getCurrentProject()==null)){
+			TableConstructionAllSquaresIncluded table=new TableConstructionAllSquaresIncluded(globalManager.getTableManager());
 			final String[] columns=table.constructColumns();
 			final String[][] rows=table.constructRows();
-			gui.setSegmentSizeDetailedTable(table.getSegmentSize());
+			tableData.setSegmentSizeDetailedTable(table.getSegmentSize());
 			tabbedPane.setSelectedIndex(0);
-			gui.makeDetailedTable(columns,rows,true);
+			globalManager.getTableManager().makeDetailedTable(columns,rows,true, tableData);
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "Select a Project first");

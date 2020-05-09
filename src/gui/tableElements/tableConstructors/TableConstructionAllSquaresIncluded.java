@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataKeeper.TableManager;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
 import data.dataPPL.pplTransition.AtomicChange;
@@ -33,6 +34,15 @@ public class TableConstructionAllSquaresIncluded implements PldConstruction {
 		
 		
 	}
+	
+	public TableConstructionAllSquaresIncluded(TableManager tableManager){
+		
+		allPPLSchemas=tableManager.getAllPPLSchemas();
+		allPPLTransitions=tableManager.getAllPPLTransitions();
+		
+		
+	}
+	
 	
 	public String[] constructColumns(){
 		

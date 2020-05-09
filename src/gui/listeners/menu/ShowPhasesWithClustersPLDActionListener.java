@@ -13,44 +13,43 @@ import data.dataKeeper.TableData;
 import gui.dialogs.ParametersJDialog;
 import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
-import gui.tableElements.tableConstructors.TableConstructionPhases;
+import gui.tableElements.tableConstructors.TableConstructionWithClusters;
 import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
+import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 
-public class ShowPhasesPLDActionListener implements ActionListener {
-	
+public class ShowPhasesWithClustersPLDActionListener implements ActionListener {
 	private GlobalManager globalManager;
 	private TableData tableData;
 	private TableUpdater tableUpdater;
-	private JTabbedPane tabbedPane;
 	private TreeManager treeManager;
+	private JTabbedPane tabbedPane;
 	
 	
-
-	public ShowPhasesPLDActionListener(GlobalManager globalManager, TableData tableData, TableUpdater tableUpdater,
-			JTabbedPane tabbedPane, TreeManager treeManager) {
+	
+	public ShowPhasesWithClustersPLDActionListener(GlobalManager globalManager, TableData tableData,
+			TableUpdater tableUpdater, TreeManager treeManager, JTabbedPane tabbedPane) {
 		super();
 		this.globalManager = globalManager;
 		this.tableData = tableData;
 		this.tableUpdater = tableUpdater;
-		this.tabbedPane = tabbedPane;
 		this.treeManager = treeManager;
+		this.tabbedPane = tabbedPane;
 	}
 
 
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		tableData.setWholeCol(-1);
 		ProjectManager projectManager = globalManager.getProjectManager();
+		ClusterManager clusterManager = globalManager.getClusterManager();
 		if(!(projectManager.getProject()==null)){
-			tableData.setWholeCol(-1);
-			ParametersJDialog jD=new ParametersJDialog(false);
+			
+			ParametersJDialog jD=new ParametersJDialog(true);
 			
 			jD.setModal(true);
 			
-			
 			jD.setVisible(true);
-			
-			ClusterManager clusterManager = globalManager.getClusterManager();
 			
 			if(jD.getConfirmation()){
 			
@@ -59,12 +58,15 @@ public class ShowPhasesPLDActionListener implements ActionListener {
 	            clusterManager.setPreProcessingTime(jD.getPreProcessingTime());
 	            clusterManager.setPreProcessingChange(jD.getPreProcessingChange());
 	            clusterManager.setNumberOfPhases(jD.getNumberOfPhases());
+	            clusterManager.setNumberOfClusters(jD.getNumberOfClusters());
+	            clusterManager.setBirthWeight(jD.geBirthWeight());
+	            clusterManager.setDeathWeight(jD.getDeathWeight());
+	            clusterManager.setChangeWeightCl(jD.getChangeWeightCluster());
 	            
 	            System.out.println(clusterManager.getTimeWeight()+" "+clusterManager.getChangeWeight());
 	            
-				PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),
+	            PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),
 						clusterManager.getTimeWeight(),clusterManager.getChangeWeight(),clusterManager.getPreProcessingTime(),clusterManager.getPreProcessingChange());
-
 				mainEngine.parseInput();		
 				System.out.println("\n\n\n");
 				mainEngine.extractPhases(clusterManager.getNumberOfPhases());
@@ -77,14 +79,17 @@ public class ShowPhasesPLDActionListener implements ActionListener {
 					mainEngine.extractReportAssessment2();
 				} catch (IOException e) {
 					e.printStackTrace();
-				}
-				*/
+				}*/
+				
 				mainEngine.connectTransitionsWithPhases(globalManager.getTableManager().getAllPPLTransitions());
 				clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
-				
+				TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalManager.getTableManager().getAllPPLSchemas(), globalManager.getTableManager().getAllPPLTables(),clusterManager.getBirthWeight(),clusterManager.getDeathWeight(),clusterManager.getChangeWeightCl());
+				mainEngine2.extractClusters(clusterManager.getNumberOfClusters());
+				clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
+				mainEngine2.print();
 				
 				if(clusterManager.getPhaseCollectors().size()!=0){
-					TableConstructionPhases table=new TableConstructionPhases(globalManager);
+					TableConstructionWithClusters table=new TableConstructionWithClusters(globalManager.getClusterManager(), globalManager.getTableManager());
 					final String[] columns=table.constructColumns();
 					final String[][] rows=table.constructRows();
 					tableData.setSegmentSize(table.getSegmentSize());
@@ -95,7 +100,18 @@ public class ShowPhasesPLDActionListener implements ActionListener {
 					tableData.setFinalRows(rows);
 					tabbedPane.setSelectedIndex(0);
 					tableUpdater.makeGeneralTablePhases(tableData);
-					treeManager.fillPhasesTree(globalManager);
+					treeManager.fillClustersTree(clusterManager);
+					
+					/*
+					ClusterValidatorMainEngine lala;
+					try {
+						lala = new ClusterValidatorMainEngine(globalDataKeeper);
+						lala.run();
+
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					*/
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "Extract Phases first");
@@ -107,8 +123,6 @@ public class ShowPhasesPLDActionListener implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Please select a project first!");
 			
 		}
-		
-		
 	}
 
 }

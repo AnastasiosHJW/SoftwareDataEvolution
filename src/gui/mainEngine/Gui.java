@@ -117,7 +117,7 @@ public class Gui extends JFrame implements ActionListener{
 	private Integer[] segmentSizeZoomArea=new Integer[4];
 	private Integer[] segmentSizeDetailedTable=new Integer[3];
 
-
+	
 	
 	private Float timeWeight=null;
 	private Float changeWeight=null;
@@ -137,6 +137,8 @@ public class Gui extends JFrame implements ActionListener{
 	private String outputAssessment2="";
 	private String transitionsFile="";
 	private ArrayList<String> selectedFromTree=new ArrayList<String>();
+	
+	
 	
 	private JTree tablesTree=new JTree();
 	private JPanel sideMenu=new JPanel();
@@ -180,6 +182,8 @@ public class Gui extends JFrame implements ActionListener{
 	
 	private GlobalManager globalManager;
 	private ShowDetailsComponents showDetails;
+	
+	private TableUpdater tableUpdater;
 
 	
 	/**
@@ -344,9 +348,9 @@ public class Gui extends JFrame implements ActionListener{
 		zoomInButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-				rowHeight=rowHeight+2;
-				columnWidth=columnWidth+1;
-				zoomAreaTable.setZoom(rowHeight,columnWidth);
+				tableData.setRowHeight(rowHeight+2);
+				tableData.setColumnWidth(columnWidth+1);
+				tableData.getZoomAreaTable().setZoom(rowHeight,columnWidth);
 				
 			}
 		});
@@ -357,15 +361,15 @@ public class Gui extends JFrame implements ActionListener{
 		zoomOutButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-				rowHeight=rowHeight-2;
-				columnWidth=columnWidth-1;
-				if(rowHeight<1){
-					rowHeight=1;
+				tableData.setRowHeight(rowHeight-2);
+				tableData.setColumnWidth(columnWidth-1);
+				if(tableData.getRowHeight()<1){
+					tableData.setRowHeight(1);
 				}
-				if (columnWidth<1) {
-					columnWidth=1;
+				if (tableData.getColumnWidth()<1) {
+					tableData.setColumnWidth(1);
 				}
-				zoomAreaTable.setZoom(rowHeight,columnWidth);
+				tableData.getZoomAreaTable().setZoom(tableData.getRowHeight(),tableData.getColumnWidth());
 				
 			}
 		});
@@ -381,7 +385,7 @@ public class Gui extends JFrame implements ActionListener{
 			@Override
 			   public void mouseClicked(MouseEvent e) {
 				
-				EnlargeTable showEnlargmentPopup= new EnlargeTable(finalRowsZoomArea,finalColumnsZoomArea,segmentSizeZoomArea);
+				EnlargeTable showEnlargmentPopup= new EnlargeTable(tableData.getFinalRowsZoomArea(),tableData.getFinalColumnsZoomArea(),tableData.getSegmentSizeZoomArea());
 				showEnlargmentPopup.setBounds(100, 100, 1300, 700);
 				
 				showEnlargmentPopup.setVisible(true);
@@ -399,9 +403,9 @@ public class Gui extends JFrame implements ActionListener{
 		undoButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-				if (firstLevelUndoColumnsZoomArea!=null) {
-					finalColumnsZoomArea=firstLevelUndoColumnsZoomArea;
-					finalRowsZoomArea=firstLevelUndoRowsZoomArea;
+				if (tableData.getFirstLevelUndoColumnsZoomArea()!=null) {
+					tableData.setFinalColumnsZoomArea(firstLevelUndoColumnsZoomArea);
+					tableData.setFinalRowsZoomArea(firstLevelUndoRowsZoomArea);
 					makeZoomAreaTableForCluster();
 				}
 				
@@ -417,7 +421,7 @@ public class Gui extends JFrame implements ActionListener{
 		uniformlyDistributedButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-			    LifeTimeTable.uniformlyDistributed(1);
+			    tableData.getLifeTimeTable().uniformlyDistributed(1);
 			    
 			  } 
 		});
@@ -430,7 +434,7 @@ public class Gui extends JFrame implements ActionListener{
 		notUniformlyDistributedButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-			    LifeTimeTable.notUniformlyDistributed(globalDataKeeper);
+				tableData.getLifeTimeTable().notUniformlyDistributed(globalDataKeeper);
 			    
 			  } 
 		});
@@ -454,11 +458,11 @@ public class Gui extends JFrame implements ActionListener{
 		
 		globalManager = new GlobalManager();
 		
-		final TableUpdater tableUpdater = new TableUpdater(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
+		tableUpdater = new TableUpdater(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
 				zoomModel, generalModel, descriptionText);
 		tableUpdater.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
 		treeManager = new TreeManager(treeLabel, tablesTree, sideMenu, tablesTreePanel,
- treeScrollPane, selectedFromTree,  tableData);
+ treeScrollPane, tableData.getSelectedFromTree(),  tableData);
 		tableUpdater.setShowDetails(showDetails);
 		
 		tableData = new TableData();
@@ -482,7 +486,7 @@ public class Gui extends JFrame implements ActionListener{
 					
 					File file = createProjectDialog.getFile();
 		            System.out.println(file.toString());
-		            project=file.getName();
+		            globalManager.getProjectManager().setProject(file.getName());
 		            String fileName=file.toString();
 		            System.out.println("!!"+project);
 		          
@@ -512,7 +516,7 @@ public class Gui extends JFrame implements ActionListener{
 
 		
 		JMenuItem mntmEditProject = new JMenuItem("Edit Project");
-		mntmLoadProject.addActionListener(new EditProjectActionListener(tableUpdater, tableData, globalManager, treeManager, tabbedPane, Gui.this));
+		mntmEditProject.addActionListener(new EditProjectActionListener(tableUpdater, tableData, globalManager, treeManager, tabbedPane, Gui.this));
 		mnFile.add(mntmEditProject);
 		
 		
@@ -520,7 +524,7 @@ public class Gui extends JFrame implements ActionListener{
 		menuBar.add(mnTable);
 		
 		JMenuItem mntmShowLifetimeTable = new JMenuItem("Show Full Detailed LifeTime Table");
-		mntmShowLifetimeTable.addActionListener(new ShowLifetimeTableActionListener(tabbedPane, globalDataKeeper, currentProject, Gui.this));
+		mntmShowLifetimeTable.addActionListener(new ShowLifetimeTableActionListener(tabbedPane, globalManager, tableData));
 		mnFile.add(mntmShowLifetimeTable);
 		
 		JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");
@@ -528,164 +532,13 @@ public class Gui extends JFrame implements ActionListener{
 		mnTable.add(mntmShowGeneralLifetimeIDU);
 		
 		JMenuItem mntmShowGeneralLifetimePhasesPLD = new JMenuItem("Show Phases PLD");
-		mntmShowGeneralLifetimePhasesPLD.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
-				if(!(project==null)){
-					wholeCol=-1;
-					ParametersJDialog jD=new ParametersJDialog(false);
-					
-					jD.setModal(true);
-					
-					
-					jD.setVisible(true);
-					
-					if(jD.getConfirmation()){
-					
-			            timeWeight = jD.getTimeWeight();
-			            changeWeight = jD.getChangeWeight();
-			            preProcessingTime = jD.getPreProcessingTime();
-			            preProcessingChange = jD.getPreProcessingChange();
-					    numberOfPhases = jD.getNumberOfPhases();
-			            
-			            System.out.println(timeWeight+" "+changeWeight);
-			            
-						PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,outputAssessment1,outputAssessment2,timeWeight,changeWeight,preProcessingTime,preProcessingChange);
-	
-						mainEngine.parseInput();		
-						System.out.println("\n\n\n");
-						mainEngine.extractPhases(numberOfPhases);
-						/*try {
-							mainEngine.extractReportAssessment1();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						try {
-							mainEngine.extractReportAssessment2();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						*/
-						mainEngine.connectTransitionsWithPhases(globalDataKeeper);
-						globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
-						
-						
-						if(globalDataKeeper.getPhaseCollectors().size()!=0){
-							TableConstructionPhases table=new TableConstructionPhases(globalDataKeeper);
-							final String[] columns=table.constructColumns();
-							final String[][] rows=table.constructRows();
-							segmentSize=table.getSegmentSize();
-							System.out.println("Schemas: "+globalDataKeeper.getAllPPLSchemas().size());
-							System.out.println("C: "+columns.length+" R: "+rows.length);
 		
-							finalColumns=columns;
-							finalRows=rows;
-							tabbedPane.setSelectedIndex(0);
-							makeGeneralTablePhases();
-							fillPhasesTree();
-						}
-						else{
-							JOptionPane.showMessageDialog(null, "Extract Phases first");
-						}
-					}
-				}
-				else{
-					
-					JOptionPane.showMessageDialog(null, "Please select a project first!");
-					
-				}
-				
-				
-			}
-		});
+		mntmShowGeneralLifetimePhasesPLD.addActionListener(new ShowPhasesPLDActionListener(globalManager,tableData,tableUpdater,tabbedPane, treeManager));
 		mnTable.add(mntmShowGeneralLifetimePhasesPLD);
 		
 		JMenuItem mntmShowGeneralLifetimePhasesWithClustersPLD = new JMenuItem("Show Phases With Clusters PLD");
-		mntmShowGeneralLifetimePhasesWithClustersPLD.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				wholeCol=-1;
-				if(!(project==null)){
-					
-					ParametersJDialog jD=new ParametersJDialog(true);
-					
-					jD.setModal(true);
-					
-					jD.setVisible(true);
-					
-					if(jD.getConfirmation()){
-					
-			            timeWeight = jD.getTimeWeight();
-			            changeWeight = jD.getChangeWeight();
-			            preProcessingTime = jD.getPreProcessingTime();
-			            preProcessingChange = jD.getPreProcessingChange();
-					    numberOfPhases = jD.getNumberOfPhases();
-					    numberOfClusters = jD.getNumberOfClusters();
-					    birthWeight=jD.geBirthWeight();
-					    deathWeight=jD.getDeathWeight();
-					    changeWeightCl=jD.getChangeWeightCluster();
-			            
-			            System.out.println(timeWeight+" "+changeWeight);
-			            
-						PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,outputAssessment1,outputAssessment2,timeWeight,changeWeight,preProcessingTime,preProcessingChange);
-						
-						mainEngine.parseInput();		
-						System.out.println("\n\n\n");
-						mainEngine.extractPhases(numberOfPhases);
-						/*try {
-							mainEngine.extractReportAssessment1();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-						try {
-							mainEngine.extractReportAssessment2();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}*/
-						
-						mainEngine.connectTransitionsWithPhases(globalDataKeeper);
-						globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
-						TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper,birthWeight,deathWeight,changeWeightCl);
-						mainEngine2.extractClusters(numberOfClusters);
-						globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
-						mainEngine2.print();
-						
-						if(globalDataKeeper.getPhaseCollectors().size()!=0){
-							TableConstructionWithClusters table=new TableConstructionWithClusters(globalDataKeeper);
-							final String[] columns=table.constructColumns();
-							final String[][] rows=table.constructRows();
-							segmentSize=table.getSegmentSize();
-							System.out.println("Schemas: "+globalDataKeeper.getAllPPLSchemas().size());
-							System.out.println("C: "+columns.length+" R: "+rows.length);
 		
-							finalColumns=columns;
-							finalRows=rows;
-							tabbedPane.setSelectedIndex(0);
-							makeGeneralTablePhases();
-							fillClustersTree();
-							
-							/*
-							ClusterValidatorMainEngine lala;
-							try {
-								lala = new ClusterValidatorMainEngine(globalDataKeeper);
-								lala.run();
-
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-							*/
-						}
-						else{
-							JOptionPane.showMessageDialog(null, "Extract Phases first");
-						}
-					}
-				}
-				else{
-					
-					JOptionPane.showMessageDialog(null, "Please select a project first!");
-					
-				}
-			}
-		});
+		mntmShowGeneralLifetimePhasesWithClustersPLD.addActionListener(new ShowPhasesWithClustersPLDActionListener(globalManager, tableData, tableUpdater, treeManager, tabbedPane));
 		mnTable.add(mntmShowGeneralLifetimePhasesWithClustersPLD);
 		
 		
@@ -697,40 +550,7 @@ public class Gui extends JFrame implements ActionListener{
 		menuBar.add(mnProject);
 		
 		mntmInfo = new JMenuItem("Info");
-		mntmInfo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				
-				if(!(currentProject==null)){
-					
-					
-					System.out.println("Project Name:"+projectName);
-					System.out.println("Dataset txt:"+datasetTxt);
-					System.out.println("Input Csv:"+inputCsv);
-					System.out.println("Output Assessment1:"+outputAssessment1);
-					System.out.println("Output Assessment2:"+outputAssessment2);
-					System.out.println("Transitions File:"+transitionsFile);
-					
-					System.out.println("Schemas:"+globalDataKeeper.getAllPPLSchemas().size());
-					System.out.println("Transitions:"+globalDataKeeper.getAllPPLTransitions().size());
-					System.out.println("Tables:"+globalDataKeeper.getAllPPLTables().size());
-					
-					
-					ProjectInfoDialog infoDialog = new ProjectInfoDialog(projectName,datasetTxt,inputCsv,transitionsFile,globalDataKeeper.getAllPPLSchemas().size(),
-							globalDataKeeper.getAllPPLTransitions().size(), globalDataKeeper.getAllPPLTables().size());
-					
-					infoDialog.setVisible(true);
-				}
-				else{
-					JOptionPane.showMessageDialog(null, "Select a Project first");
-					return;
-				}
-				
-				
-				
-				
-			}
-		});
+		mntmInfo.addActionListener(new InfoActionListener(globalManager));
 		mnProject.add(mntmInfo);
 		buttonHelp.setBounds(900,900 , 80, 40);
 		menuBar.add(buttonHelp);
@@ -745,735 +565,6 @@ public class Gui extends JFrame implements ActionListener{
 	}
 	
 	
-	private void makeGeneralTableIDU() {
-	
-		PldRowSorter sorter=new PldRowSorter(finalRowsZoomArea,globalDataKeeper);
-		
-		finalRowsZoomArea=sorter.sortRows();
-	    
-		showingPld=true;
-		zoomInButton.setVisible(true);
-		zoomOutButton.setVisible(true);
-		
-		showThisToPopup.setVisible(true);
-		
-		int numberOfColumns=finalRowsZoomArea[0].length;
-		int numberOfRows=finalRowsZoomArea.length;
-		
-		selectedRows=new ArrayList<Integer>();
-		
-		String[][] rows=new String[numberOfRows][numberOfColumns];
-		
-		for(int i=0; i<numberOfRows; i++){
-			
-			rows[i][0]=finalRowsZoomArea[i][0];
-			
-		}
-		
-		zoomModel=new MyTableModel(finalColumnsZoomArea, rows);
-		
-		final JvTable generalTable=new JvTable(zoomModel);
-		
-		generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		
-		if(rowHeight<1){
-			rowHeight=1;
-		}
-		if (columnWidth<1) {
-			columnWidth=1;
-		}
-		
-		for(int i=0; i<generalTable.getRowCount(); i++){
-				generalTable.setRowHeight(i, rowHeight);
-				
-		}
-
-		
-		generalTable.setShowGrid(false);
-		generalTable.setIntercellSpacing(new Dimension(0, 0));
-		
-		
-		
-		for(int i=0; i<generalTable.getColumnCount(); i++){
-			if(i==0){
-				generalTable.getColumnModel().getColumn(0).setPreferredWidth(columnWidth);
-				
-			}
-			else{
-				generalTable.getColumnModel().getColumn(i).setPreferredWidth(columnWidth);
-				
-			}
-		}
-		
-		int start=-1;
-		int end=-1;
-		if (globalDataKeeper.getPhaseCollectors()!=null && wholeCol!=-1 && wholeCol!=0) {
-			start=globalDataKeeper.getPhaseCollectors().get(0).getPhases().get(wholeCol-1).getStartPos();
-			end=globalDataKeeper.getPhaseCollectors().get(0).getPhases().get(wholeCol-1).getEndPos();
-		}
-
-
-		
-		if(wholeCol!=-1){
-			for(int i=0; i<generalTable.getColumnCount(); i++){
-				if(!(generalTable.getColumnName(i).equals("Table name"))){
-					if(Integer.parseInt(generalTable.getColumnName(i))>=start && Integer.parseInt(generalTable.getColumnName(i))<=end){
-			
-						generalTable.getColumnModel().getColumn(i).setHeaderRenderer(new IDUHeaderTableRenderer());
-			
-					}
-				}
-			}
-		}
-		
-		final IDUTableRenderer renderer = new IDUTableRenderer(Gui.this,finalRowsZoomArea, globalDataKeeper, segmentSize);
-		//generalTable.setDefaultRenderer(Object.class, renderer);
-		
-		
-		
-		generalTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
-		{
-		    
-			private static final long serialVersionUID = 1L;
-
-			@Override
-		    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-		    {
-		        final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		        
-		        String tmpValue=finalRowsZoomArea[row][column];
-		        String columnName=table.getColumnName(column);
-		        Color fr=new Color(0,0,0);
-		        
-		        c.setForeground(fr);
-		        setOpaque(true);
-		      
-		        if(column==wholeColZoomArea && wholeColZoomArea!=0){
-		        	
-		        	String description="Transition ID:"+table.getColumnName(column)+"\n";
-		        	description=description+"Old Version Name:"+globalDataKeeper.getAllPPLTransitions().
-	        				get(Integer.parseInt(table.getColumnName(column))).getOldVersionName()+"\n";
-	        		description=description+"New Version Name:"+globalDataKeeper.getAllPPLTransitions().
-	        				get(Integer.parseInt(table.getColumnName(column))).getNewVersionName()+"\n";		        		
-	        		
-        			description=description+"Transition Changes:"+globalDataKeeper.getAllPPLTransitions().get(Integer.parseInt(table.getColumnName(column))).getNumberOfChangesForOneTr()+"\n";
-        			description=description+"Additions:"+globalDataKeeper.getAllPPLTransitions().get(Integer.parseInt(table.getColumnName(column))).getNumberOfAdditionsForOneTr()+"\n";
-        			description=description+"Deletions:"+globalDataKeeper.getAllPPLTransitions().get(Integer.parseInt(table.getColumnName(column))).getNumberOfDeletionsForOneTr()+"\n";
-        			description=description+"Updates:"+globalDataKeeper.getAllPPLTransitions().get(Integer.parseInt(table.getColumnName(column))).getNumberOfUpdatesForOneTr()+"\n";
-
-        			
-	        		descriptionText.setText(description);
-		        	
-		        	Color cl = new Color(255,69,0,100);
-
-	        		c.setBackground(cl);
-	        		return c;
-		        }
-		        else if(selectedColumnZoomArea==0){
-		    		
-		        	if (isSelected){
-		        		Color cl = new Color(255,69,0,100);
-		        		c.setBackground(cl);
-		        		
-		        		String description="Table:"+finalRowsZoomArea[row][0]+"\n";
-		        		description=description+"Birth Version Name:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).getBirth()+"\n";
-		        		description=description+"Birth Version ID:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).getBirthVersionID()+"\n";
-		        		description=description+"Death Version Name:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).getDeath()+"\n";
-		        		description=description+"Death Version ID:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).getDeathVersionID()+"\n";
-		        		description=description+"Total Changes:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).getTotalChanges()+"\n";
-
-		        		
-		        		descriptionText.setText(description);
-		        		
-		        		return c;
-		        		
-		        		
-		        	}
-		        }
-		        else{
-
-
-		        	if(selectedFromTree.contains(finalRowsZoomArea[row][0])){
-
-
-		        		Color cl = new Color(255,69,0,100);
-		        		
-		        		c.setBackground(cl);
-		        		
-		        		return c;
-		        	}
-		        	
-			      
-		        	
-		        	if (isSelected && hasFocus){
-
-		        		String description="";
-		        		if(!table.getColumnName(column).contains("Table name")){
-			        		description="Table:"+finalRowsZoomArea[row][0]+"\n";
-			        		
-			        		description=description+"Old Version Name:"+globalDataKeeper.getAllPPLTransitions().
-			        				get(Integer.parseInt(table.getColumnName(column))).getOldVersionName()+"\n";
-			        		description=description+"New Version Name:"+globalDataKeeper.getAllPPLTransitions().
-			        				get(Integer.parseInt(table.getColumnName(column))).getNewVersionName()+"\n";		        		
-			        		if(globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).
-			        				getTableChanges().getTableAtChForOneTransition(Integer.parseInt(table.getColumnName(column)))!=null){
-			        			description=description+"Transition Changes:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).
-			        				getTableChanges().getTableAtChForOneTransition(Integer.parseInt(table.getColumnName(column))).size()+"\n";
-			        			description=description+"Additions:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).
-			        					getNumberOfAdditionsForOneTr(Integer.parseInt(table.getColumnName(column)))+"\n";
-			        			description=description+"Deletions:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).
-			        					getNumberOfDeletionsForOneTr(Integer.parseInt(table.getColumnName(column)))+"\n";
-			        			description=description+"Updates:"+globalDataKeeper.getAllPPLTables().get(finalRowsZoomArea[row][0]).
-			        					getNumberOfUpdatesForOneTr(Integer.parseInt(table.getColumnName(column)))+"\n";
-			        			
-			        		}
-			        		else{
-			        			description=description+"Transition Changes:0"+"\n";
-			        			description=description+"Additions:0"+"\n";
-			        			description=description+"Deletions:0"+"\n";
-			        			description=description+"Updates:0"+"\n";
-			        			
-			        		}
-			        		
-			        		descriptionText.setText(description);
-		        		}
-		        		Color cl = new Color(255,69,0,100);
-		        		
-		        		c.setBackground(cl);
-		        		
-		        		return c;
-			        }
-		        	
-		        	
-		        	
-		        }
-
-		        try{
-		        	int numericValue=Integer.parseInt(tmpValue);
-		        	Color insersionColor=null;
-					setToolTipText(Integer.toString(numericValue));
-
-		        	
-	        		if(numericValue==0){
-	        			insersionColor=new Color(154,205,50,200);
-	        		}
-	        		else if(numericValue> 0&& numericValue<=segmentSizeZoomArea[3]){
-	        			
-	        			insersionColor=new Color(176,226,255);
-		        	}
-	        		else if(numericValue>segmentSizeZoomArea[3] && numericValue<=2*segmentSizeZoomArea[3]){
-	        			insersionColor=new Color(92,172,238);
-	        		}
-	        		else if(numericValue>2*segmentSizeZoomArea[3] && numericValue<=3*segmentSizeZoomArea[3]){
-	        			
-	        			insersionColor=new Color(28,134,238);
-	        		}
-	        		else{
-	        			insersionColor=new Color(16,78,139);
-	        		}
-	        		c.setBackground(insersionColor);
-		        	
-		        	return c;
-		        }
-		        catch(Exception e){
-		        		
-
-	        		if(tmpValue.equals("")){
-	        			c.setBackground(Color.GRAY);
-	        			return c; 
-	        		}
-	        		else{
-	        			if(columnName.contains("v")){
-	        				c.setBackground(Color.lightGray);
-	        				setToolTipText(columnName);
-	        			}
-	        			else{
-	        				Color tableNameColor=new Color(205,175,149);
-	        				c.setBackground(tableNameColor);
-	        			}
-		        		return c; 
-	        		}
-		        		
-		        		
-		        }
-		    }
-		});
-				
-		generalTable.addMouseListener(new MouseAdapter() {
-			@Override
-			   public void mouseClicked(MouseEvent e) {
-				
-				if (e.getClickCount() == 1) {
-					JTable target = (JTable)e.getSource();
-			         
-			         selectedRowsFromMouse = target.getSelectedRows();
-			         selectedColumnZoomArea = target.getSelectedColumn();
-			         renderer.setSelCol(selectedColumnZoomArea);
-			         target.getSelectedColumns();
-			         
-			         zoomAreaTable.repaint();
-				}
-				
-			  }
-		});
-		
-		generalTable.addMouseListener(new MouseAdapter() {
-			@Override
-			   public void mouseReleased(MouseEvent e) {
-				
-					if(SwingUtilities.isRightMouseButton(e)){
-						System.out.println("Right Click");
-
-						JTable target1 = (JTable)e.getSource();
-						target1.getSelectedColumns();
-						selectedRowsFromMouse=target1.getSelectedRows();
-						System.out.println(target1.getSelectedColumns().length);
-						System.out.println(target1.getSelectedRow());
-						for(int rowsSelected=0; rowsSelected<selectedRowsFromMouse.length; rowsSelected++){
-							System.out.println(generalTable.getValueAt(selectedRowsFromMouse[rowsSelected], 0));
-						}
-						final JPopupMenu popupMenu = new JPopupMenu();
-				        JMenuItem showDetailsItem = new JMenuItem("Clear Selection");
-				        showDetailsItem.addActionListener(new ActionListener() {
-
-				            @Override
-				            public void actionPerformed(ActionEvent e) {
-				            	selectedFromTree=new ArrayList<String>();
-				            	zoomAreaTable.repaint();
-				            }
-				        });
-				        popupMenu.add(showDetailsItem);
-				        popupMenu.show(generalTable, e.getX(),e.getY());
-						        						        
-						    
-					}
-				
-			   }
-		});
-		
-		
-		generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseClicked(MouseEvent e) {
-		        wholeColZoomArea = generalTable.columnAtPoint(e.getPoint());
-		        renderer.setWholeCol(generalTable.columnAtPoint(e.getPoint()));
-		        //String name = generalTable.getColumnName(wholeColZoomArea);
-		        //System.out.println("Column index selected " + wholeColZoomArea + " " + name);
-		        generalTable.repaint();
-		    }
-		});
-		
-		generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
-		    @Override
-		    public void mouseReleased(MouseEvent e) {
-		    	if(SwingUtilities.isRightMouseButton(e)){
-					System.out.println("Right Click");
-					
-							final JPopupMenu popupMenu = new JPopupMenu();
-					        JMenuItem showDetailsItem = new JMenuItem("Clear Column Selection");
-					        showDetailsItem.addActionListener(new ActionListener() {
-
-					            @Override
-					            public void actionPerformed(ActionEvent e) {
-					            	wholeColZoomArea=-1;
-							        renderer.setWholeCol(wholeColZoomArea);
-
-					            	generalTable.repaint();
-					            }
-					        });
-					        popupMenu.add(showDetailsItem);
-					        popupMenu.show(generalTable, e.getX(),e.getY());
-					    
-				}
-			
-		   }
-		    
-		});
-		
-		zoomAreaTable=generalTable;
-		tmpScrollPaneZoomArea.setViewportView(zoomAreaTable);
-		tmpScrollPaneZoomArea.setAlignmentX(0);
-		tmpScrollPaneZoomArea.setAlignmentY(0);
-		tmpScrollPaneZoomArea.setBounds(300,300,950,250);
-		tmpScrollPaneZoomArea.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		tmpScrollPaneZoomArea.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        
-		lifeTimePanel.setCursor(getCursor());
-		lifeTimePanel.add(tmpScrollPaneZoomArea);
-		
-		
-		
-	}
-
-private void makeGeneralTablePhases() {
-	uniformlyDistributedButton.setVisible(true);
-	
-	notUniformlyDistributedButton.setVisible(true);
-	
-	int numberOfColumns=finalRows[0].length;
-	int numberOfRows=finalRows.length;
-	
-	selectedRows=new ArrayList<Integer>();
-	
-	String[][] rows=new String[numberOfRows][numberOfColumns];
-	
-	for(int i=0; i<numberOfRows; i++){
-		
-		rows[i][0]=finalRows[i][0];
-		
-	}
-	
-	generalModel=new MyTableModel(finalColumns, rows);
-	
-	final JvTable generalTable=new JvTable(generalModel);
-	
-	generalTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-	
-	generalTable.setShowGrid(false);
-	generalTable.setIntercellSpacing(new Dimension(0, 0));
-	
-	
-	
-	for(int i=0; i<generalTable.getColumnCount(); i++){
-		if(i==0){
-			generalTable.getColumnModel().getColumn(0).setPreferredWidth(86);
-			
-		}
-		else{
-			
-			generalTable.getColumnModel().getColumn(i).setPreferredWidth(1);
-			
-		}
-	}
-	
-	generalTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
-	{
-	    
-		private static final long serialVersionUID = 1L;
-
-		@Override
-	    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column)
-	    {
-	        final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	        	        
-	        String tmpValue=finalRows[row][column];
-	        String columnName=table.getColumnName(column);
-	        Color fr=new Color(0,0,0);
-	        c.setForeground(fr);
-	        
-	        if(column==wholeCol && wholeCol!=0){
-	        	
-	        	String description=table.getColumnName(column)+"\n";
-	          	description=description+"First Transition ID:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-        				get(column-1).getStartPos()+"\n";
-        		description=description+"Last Transition ID:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-        				get(column-1).getEndPos()+"\n";
-        		description=description+"Total Changes For This Phase:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-        				get(column-1).getTotalUpdates()+"\n";
-        		description=description+"Additions For This Phase:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-        				get(column-1).getTotalAdditionsOfPhase()+"\n";
-        		description=description+"Deletions For This Phase:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-        				get(column-1).getTotalDeletionsOfPhase()+"\n";
-        		description=description+"Updates For This Phase:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-        				get(column-1).getTotalUpdatesOfPhase()+"\n";
-	        	
-        		descriptionText.setText(description);
-	        	
-	        	Color cl = new Color(255,69,0,100);
-
-        		c.setBackground(cl);
-        		return c;
-	        }
-	        else if(selectedColumn==0){
-	        	if (isSelected){
-	        		
-	        		if(finalRows[row][0].contains("Cluster")){
-		        		String description="Cluster:"+finalRows[row][0]+"\n";
-		        		description=description+"Birth Version Name:"+globalDataKeeper.getClusterCollectors().get(0).getClusters().get(row).getBirthSqlFile()+"\n";
-		        		description=description+"Birth Version ID:"+globalDataKeeper.getClusterCollectors().get(0).getClusters().get(row).getBirth()+"\n";
-		        		description=description+"Death Version Name:"+globalDataKeeper.getClusterCollectors().get(0).getClusters().get(row).getDeathSqlFile()+"\n";
-		        		description=description+"Death Version ID:"+globalDataKeeper.getClusterCollectors().get(0).getClusters().get(row).getDeath()+"\n";
-		        		description=description+"Tables:"+globalDataKeeper.getClusterCollectors().get(0).getClusters().get(row).getNamesOfTables().size()+"\n";
-		        		description=description+"Total Changes:"+globalDataKeeper.getClusterCollectors().get(0).getClusters().get(row).getTotalChanges()+"\n";
-		        		
-		        		descriptionText.setText(description);
-	        		}
-	        		else{
-		        		String description="Table:"+finalRows[row][0]+"\n";
-		        		description=description+"Birth Version Name:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getBirth()+"\n";
-		        		description=description+"Birth Version ID:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getBirthVersionID()+"\n";
-		        		description=description+"Death Version Name:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getDeath()+"\n";
-		        		description=description+"Death Version ID:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getDeathVersionID()+"\n";
-		        		description=description+"Total Changes:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getTotalChanges()+"\n";
-		        		descriptionText.setText(description);
-
-	        		}
-
-	        		
-	        		
-	        		Color cl = new Color(255,69,0,100);
-	        		
-	        		c.setBackground(cl);
-	        		return c;
-	        	}
-	        }
-	        else{
-	        	
-	        	if(selectedFromTree.contains(finalRows[row][0])){
-
-	        		Color cl = new Color(255,69,0,100);
-	        		
-	        		c.setBackground(cl);
-	        		
-	        		return c;
-	        	}
-	        	
-	        	if (isSelected && hasFocus){
-		        	
-	        		String description="";
-	        		if(!table.getColumnName(column).contains("Table name")){
-	        			
-		        		if(finalRows[row][0].contains("Cluster")){
-
-			        		description=finalRows[row][0]+"\n";
-			        		description=description+"Tables:"+globalDataKeeper.getClusterCollectors().get(0).getClusters().get(row).getNamesOfTables().size()+"\n\n";
-
-			        		description=description+table.getColumnName(column)+"\n";
-			        		description=description+"First Transition ID:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-			        				get(column-1).getStartPos()+"\n";
-			        		description=description+"Last Transition ID:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-			        				get(column-1).getEndPos()+"\n\n";
-			        		description=description+"Total Changes For This Phase:"+tmpValue+"\n";
-			        		
-		        		}
-		        		else{
-		        			description=table.getColumnName(column)+"\n";
-			        		description=description+"First Transition ID:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-			        				get(column-1).getStartPos()+"\n";
-			        		description=description+"Last Transition ID:"+globalDataKeeper.getPhaseCollectors().get(0).getPhases().
-			        				get(column-1).getEndPos()+"\n\n";
-		        			description=description+"Table:"+finalRows[row][0]+"\n";
-			        		description=description+"Birth Version Name:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getBirth()+"\n";
-			        		description=description+"Birth Version ID:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getBirthVersionID()+"\n";
-			        		description=description+"Death Version Name:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getDeath()+"\n";
-			        		description=description+"Death Version ID:"+globalDataKeeper.getAllPPLTables().get(finalRows[row][0]).getDeathVersionID()+"\n";
-			        		description=description+"Total Changes For This Phase:"+tmpValue+"\n";
-			        		
-		        		}
-		        		
-		        		descriptionText.setText(description);
-
-	        		}
-	        		
-	        		Color cl = new Color(255,69,0,100);
-	        		
-	        		c.setBackground(cl);
-	        		return c;
-		        }
-	        	
-	        }
-
-
-	        try{
-	        	int numericValue=Integer.parseInt(tmpValue);
-	        	Color insersionColor=null;
-				setToolTipText(Integer.toString(numericValue));
-
-	        	
-        		if(numericValue==0){
-        			insersionColor=new Color(154,205,50,200);
-        		}
-        		else if(numericValue> 0&& numericValue<=segmentSize[3]){
-        			
-        			insersionColor=new Color(176,226,255);
-	        	}
-        		else if(numericValue>segmentSize[3] && numericValue<=2*segmentSize[3]){
-        			insersionColor=new Color(92,172,238);
-        		}
-        		else if(numericValue>2*segmentSize[3] && numericValue<=3*segmentSize[3]){
-        			
-        			insersionColor=new Color(28,134,238);
-        		}
-        		else{
-        			insersionColor=new Color(16,78,139);
-        		}
-        		c.setBackground(insersionColor);
-	        	
-	        	return c;
-	        }
-	        catch(Exception e){
-	        		
-
-	        	
-        		if(tmpValue.equals("")){
-        			c.setBackground(Color.gray);
-        			return c; 
-        		}
-        		else{
-        			if(columnName.contains("v")){
-        				c.setBackground(Color.lightGray);
-        				setToolTipText(columnName);
-        			}
-        			else{
-        				Color tableNameColor=new Color(205,175,149);
-        				c.setBackground(tableNameColor);
-        			}
-	        		return c; 
-        		}
-	        		
-	        		
-	        }
-	    }
-	});
-	
-	generalTable.addMouseListener(new MouseAdapter() {
-		@Override
-		   public void mouseClicked(MouseEvent e) {
-			
-			if (e.getClickCount() == 1) {
-				JTable target = (JTable)e.getSource();
-		         
-		         selectedRowsFromMouse = target.getSelectedRows();
-		         selectedColumn = target.getSelectedColumn();
-		         LifeTimeTable.repaint();
-			}
-
-		   }
-	});
-	
-	generalTable.addMouseListener(new MouseAdapter() {
-		@Override
-		   public void mouseReleased(MouseEvent e) {
-				if(e.getButton() == MouseEvent.BUTTON3){
-					System.out.println("Right Click");
-
-					JTable target1 = (JTable)e.getSource();
-					selectedColumn=target1.getSelectedColumn();
-					selectedRowsFromMouse=new int[target1.getSelectedRows().length];
-					selectedRowsFromMouse=target1.getSelectedRows();
-					
-					final String sSelectedRow = (String) generalTable.getValueAt(target1.getSelectedRow(),0);
-					tablesSelected = new ArrayList<String>();
-
-					for(int rowsSelected=0; rowsSelected<selectedRowsFromMouse.length; rowsSelected++){
-						tablesSelected.add((String) generalTable.getValueAt(selectedRowsFromMouse[rowsSelected], 0));
-					}
-					
-					JPopupMenu popupMenu = new JPopupMenu();
-			        JMenuItem showDetailsItem = new JMenuItem("Show Details for the selection");
-			        showDetailsItem.addActionListener(new ActionListener() {
-
-			            @Override
-			            public void actionPerformed(ActionEvent le) {
-			            	if(sSelectedRow.contains("Cluster ")){
-			            		showClusterSelectionToZoomArea(selectedColumn,sSelectedRow);
-
-			            	}
-			            	else{
-			            		showSelectionToZoomArea(selectedColumn);
-			            	}
-			            }
-			        });
-			        popupMenu.add(showDetailsItem);
-			        JMenuItem clearSelectionItem = new JMenuItem("Clear Selection");
-			        clearSelectionItem.addActionListener(new ActionListener() {
-
-			            @Override
-			            public void actionPerformed(ActionEvent le) {
-			            	
-			            	selectedFromTree=new ArrayList<String>();
-			            	LifeTimeTable.repaint();
-			            }
-			        });
-			        popupMenu.add(clearSelectionItem);
-			        popupMenu.show(generalTable, e.getX(),e.getY());
-					      
-				}
-			
-		   }
-	});
-	
-	generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
-	    @Override
-	    public void mouseClicked(MouseEvent e) {
-	        wholeCol = generalTable.columnAtPoint(e.getPoint());
-	        String name = generalTable.getColumnName(wholeCol);
-	        System.out.println("Column index selected " + wholeCol + " " + name);
-	        generalTable.repaint();
-	        if (showingPld) {
-		        makeGeneralTableIDU();
-			}
-	    }
-	});
-	
-	generalTable.getTableHeader().addMouseListener(new MouseAdapter() {
-	    @Override
-	    public void mouseReleased(MouseEvent e) {
-	    	if(SwingUtilities.isRightMouseButton(e)){
-				System.out.println("Right Click");
-				
-						final JPopupMenu popupMenu = new JPopupMenu();
-				        JMenuItem clearColumnSelectionItem = new JMenuItem("Clear Column Selection");
-				        clearColumnSelectionItem.addActionListener(new ActionListener() {
-
-				            @Override
-				            public void actionPerformed(ActionEvent e) {
-				            	wholeCol=-1;
-				            	generalTable.repaint();
-				            	if(showingPld){
-				            		makeGeneralTableIDU();
-				            	}
-				            }
-				        });
-				        popupMenu.add(clearColumnSelectionItem);
-				        JMenuItem showDetailsItem = new JMenuItem("Show Details for this Phase");
-				        showDetailsItem.addActionListener(new ActionListener() {
-
-				            @Override
-				            public void actionPerformed(ActionEvent e) {
-								String sSelectedRow=finalRows[0][0];
-								System.out.println("?"+sSelectedRow);
-				            	tablesSelected=new ArrayList<String>();
-				            	for(int i=0; i<finalRows.length; i++)
-				            		tablesSelected.add((String) generalTable.getValueAt(i, 0));
-
-				            	if(!sSelectedRow.contains("Cluster ")){
-				            		
-				            		showSelectionToZoomArea(wholeCol);	
-				            	}
-				            	else{
-				            		showClusterSelectionToZoomArea(wholeCol, "");
-				            	}
-				            	
-				            }
-				        });
-				        popupMenu.add(showDetailsItem);
-				        popupMenu.show(generalTable, e.getX(),e.getY());
-				    
-			}
-		
-	   }
-	    
-	});
-	
-	
-	LifeTimeTable=generalTable;
-	
-	tmpScrollPane.setViewportView(LifeTimeTable);
-	tmpScrollPane.setAlignmentX(0);
-	tmpScrollPane.setAlignmentY(0);
-    tmpScrollPane.setBounds(300,30,950,265);
-    tmpScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-    tmpScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-    
-	lifeTimePanel.setCursor(getCursor());
-	lifeTimePanel.add(tmpScrollPane);
-    
-	
-	
-}
-
-
 
 private void showSelectionToZoomArea(int selectedColumn){
 	
@@ -1494,40 +585,8 @@ private void showSelectionToZoomArea(int selectedColumn){
 	
 }
 
-private void showClusterSelectionToZoomArea(int selectedColumn,String selectedCluster){
 
-	
-	ArrayList<String> tablesOfCluster=new ArrayList<String>();
-	for(int i=0; i <tablesSelected.size(); i++){
-		String[] selectedClusterSplit= tablesSelected.get(i).split(" ");
-		int cluster=Integer.parseInt(selectedClusterSplit[1]);
-		ArrayList<String> namesOfTables=globalDataKeeper.getClusterCollectors().get(0).getClusters().get(cluster).getNamesOfTables();
-		for(int j=0; j<namesOfTables.size(); j++){
-			tablesOfCluster.add(namesOfTables.get(j));
-		}
-		System.out.println(tablesSelected.get(i));
-	}
-	
-	PldConstruction table;
-	if (selectedColumn==0) {
-		table= new TableConstructionClusterTablesPhasesZoomA(globalDataKeeper,tablesOfCluster);
-	}
-	else{
-		table= new TableConstructionZoomArea(globalDataKeeper,tablesOfCluster,selectedColumn);
-	}
-	final String[] columns=table.constructColumns();
-	final String[][] rows=table.constructRows();
-	segmentSizeZoomArea = table.getSegmentSize();
-	System.out.println("Schemas: "+globalDataKeeper.getAllPPLSchemas().size());
-	System.out.println("C: "+columns.length+" R: "+rows.length);
 
-	finalColumnsZoomArea=columns;
-	finalRowsZoomArea=rows;
-	tabbedPane.setSelectedIndex(0);
-	makeZoomAreaTableForCluster();
-	
-	
-}
 
 private void makeZoomAreaTable() {
 	showingPld=false;
@@ -1810,6 +869,10 @@ private void makeZoomAreaTable() {
 	
 	
 }
+
+
+
+
 
 private void makeZoomAreaTableForCluster() {
 	showingPld=false;
@@ -2113,6 +1176,9 @@ private void makeZoomAreaTableForCluster() {
 	
 }
 
+
+
+
 	public void makeDetailedTable(String[] columns , String[][] rows, final boolean levelized){
 		
 		detailedModel=new MyTableModel(columns,rows);
@@ -2351,133 +1417,13 @@ private void makeZoomAreaTableForCluster() {
         }
     }
 
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 
 		
 	}
-	
-	private void importData(String fileName) throws IOException, RecognitionException {
-		
-		
-		BufferedReader br = new BufferedReader(new FileReader(fileName));
-		
-		String line;
-		
-		while(true) {
-			line = br.readLine();
-			if (line == null) 
-				break;
-			if(line.contains("Project-name")){
-				String[] projectNameTable=line.split(":");
-				projectName=projectNameTable[1];
-			}
-			else if(line.contains("Dataset-txt")){
-				String[] datasetTxtTable=line.split(":");
-				datasetTxt=datasetTxtTable[1];
-			}
-			else if(line.contains("Input-csv")){
-				String[] inputCsvTable=line.split(":");
-				inputCsv=inputCsvTable[1];
-			}
-			else if(line.contains("Assessement1-output")){
-				String[] outputAss1=line.split(":");
-				outputAssessment1=outputAss1[1];
-			}
-			else if(line.contains("Assessement2-output")){
-				String[] outputAss2=line.split(":");
-				outputAssessment2=outputAss2[1];
-			}
-			else if(line.contains("Transition-xml")){
-				String[] transitionXmlTable=line.split(":");
-				transitionsFile=transitionXmlTable[1];
-			}
-			
-			
-		};	
-		
-		br.close();
-		
-		
-		System.out.println("Project Name:"+projectName);
-		System.out.println("Dataset txt:"+datasetTxt);
-		System.out.println("Input Csv:"+inputCsv);
-		System.out.println("Output Assessment1:"+outputAssessment1);
-		System.out.println("Output Assessment2:"+outputAssessment2);
-		System.out.println("Transitions File:"+transitionsFile);
 
-		globalDataKeeper=new GlobalDataKeeper(datasetTxt,transitionsFile);
-		globalDataKeeper.setData();
-		System.out.println(globalDataKeeper.getAllPPLTables().size());
-		
-        System.out.println(fileName);
-
-        fillTable();
-        fillTree();
-
-		currentProject=fileName;
-		
-	}
-	
-	public void fillTable() {
-		TableConstructionIDU table=new TableConstructionIDU(globalDataKeeper);
-		final String[] columns=table.constructColumns();
-		final String[][] rows=table.constructRows();
-		segmentSizeZoomArea = table.getSegmentSize();
-
-		finalColumnsZoomArea=columns;
-		finalRowsZoomArea=rows;
-		tabbedPane.setSelectedIndex(0);
-		makeGeneralTableIDU();
-		
-		timeWeight = (float)0.5;
-        changeWeight = (float)0.5;
-        preProcessingTime = false;
-        preProcessingChange = false;
-        if(globalDataKeeper.getAllPPLTransitions().size()<56){
-        	numberOfPhases=40;
-        }
-        else{
-        	numberOfPhases = 56;
-        }
-	    numberOfClusters =14;
-        
-        System.out.println(timeWeight+" "+changeWeight);
-        
-		PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,outputAssessment1,outputAssessment2,timeWeight,changeWeight,preProcessingTime,preProcessingChange);
-
-		Double b=new Double(0.3);
-		Double d=new Double(0.3);
-		Double c=new Double(0.3);
-			
-		mainEngine.parseInput();		
-		System.out.println("\n\n\n");
-		mainEngine.extractPhases(numberOfPhases);
-		
-		mainEngine.connectTransitionsWithPhases(globalDataKeeper);
-		globalDataKeeper.setPhaseCollectors(mainEngine.getPhaseCollectors());
-		TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper,b,d,c);
-		mainEngine2.extractClusters(numberOfClusters);
-		globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
-		mainEngine2.print();
-		
-		if(globalDataKeeper.getPhaseCollectors().size()!=0){
-			TableConstructionWithClusters tableP=new TableConstructionWithClusters(globalDataKeeper);
-			final String[] columnsP=tableP.constructColumns();
-			final String[][] rowsP=tableP.constructRows();
-			segmentSize=tableP.getSegmentSize();
-			finalColumns=columnsP;
-			finalRows=rowsP;
-			tabbedPane.setSelectedIndex(0);
-			makeGeneralTablePhases();
-			fillClustersTree();
-		}
-		System.out.println("Schemas:"+globalDataKeeper.getAllPPLSchemas().size());
-		System.out.println("Transitions:"+globalDataKeeper.getAllPPLTransitions().size());
-		System.out.println("Tables:"+globalDataKeeper.getAllPPLTables().size());
-
-	}
-	
 	public void optimize() throws IOException{
 		
 		String lalaString="Birth Weight:"+"\tDeath Weight:"+"\tChange Weight:"+"\tTotal Cohesion:"+"\tTotal Separation:"+"\n";
@@ -2586,6 +1532,8 @@ private void makeZoomAreaTableForCluster() {
 	}
 	
 	
+
+
 	public void fillTree(){
 		
 		 TreeConstructionGeneral tc=new TreeConstructionGeneral(globalDataKeeper);
@@ -2752,6 +1700,8 @@ private void makeZoomAreaTableForCluster() {
 		
 	}
 	
+	
+	
 	public void setDescription(String descr){
 		descriptionText.setText(descr);
 	}
@@ -2765,6 +1715,6 @@ private void makeZoomAreaTableForCluster() {
 	}
 
 
-		
+
 	
 }

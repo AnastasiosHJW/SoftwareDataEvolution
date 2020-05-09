@@ -42,7 +42,6 @@ public class LoadProjectActionListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		String fileName=null;
-		String project=null;
 
 		File dir=new File("filesHandler/inis");
 		JFileChooser fcOpen1 = new JFileChooser();
@@ -53,9 +52,9 @@ public class LoadProjectActionListener implements ActionListener {
 			
             File file = fcOpen1.getSelectedFile();
             System.out.println(file.toString());
-            project=file.getName();
+            globalManager.getProjectManager().setProject(file.getName());
             fileName=file.toString();
-            System.out.println("!!"+project);
+            System.out.println("!!"+globalManager.getProjectManager().getProject());
           
 
 		}

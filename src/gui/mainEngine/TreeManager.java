@@ -18,10 +18,12 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
 import data.dataKeeper.ClusterManager;
+import data.dataKeeper.GlobalManager;
 import data.dataKeeper.TableData;
 import data.dataKeeper.TableManager;
 import gui.tableElements.commons.JvTable;
 import gui.treeElements.TreeConstructionGeneral;
+import gui.treeElements.TreeConstructionPhases;
 import gui.treeElements.TreeConstructionPhasesWithClusters;
 
 public class TreeManager {
@@ -160,6 +162,60 @@ public class TreeManager {
 
 		 sideMenu.revalidate();
 		 sideMenu.repaint();		
+		
+	}
+	
+	public void fillPhasesTree(GlobalManager globalManager){
+		
+		 TreeConstructionPhases tc=new TreeConstructionPhases(globalManager);
+		 tablesTree=tc.constructTree();
+		 
+		 tablesTree.addTreeSelectionListener(new TreeSelectionListener () {
+			    public void valueChanged(TreeSelectionEvent ae) { 
+			    	TreePath selection = ae.getPath();
+			    	selectedFromTree.add(selection.getLastPathComponent().toString());
+			    	System.out.println(selection.getLastPathComponent().toString()+" is selected");
+			    	
+			    }
+		 });
+		 
+		 tablesTree.addMouseListener(new MouseAdapter() {
+				@Override
+				   public void mouseReleased(MouseEvent e) {
+					
+						if(SwingUtilities.isRightMouseButton(e)){
+							System.out.println("Right Click Tree");
+							
+							final JPopupMenu popupMenu = new JPopupMenu();
+					        JMenuItem showDetailsItem = new JMenuItem("Show This into the Table");
+					        showDetailsItem.addActionListener(new ActionListener() {
+
+					            @Override
+					            public void actionPerformed(ActionEvent e) {
+					          
+					                tableData.getLifeTimeTable().repaint();
+					            	
+					            }
+					        });
+					        popupMenu.add(showDetailsItem);
+					        popupMenu.show(tablesTree, e.getX(),e.getY());
+							        							        
+							
+						}
+					
+				   }
+			});
+		 
+		 treeScrollPane.setViewportView(tablesTree);
+		 treeScrollPane.setBounds(5, 5, 250, 170);
+		 treeScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		 treeScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		 tablesTreePanel.add(treeScrollPane);
+		 
+		 treeLabel.setText("Phases Tree");
+
+		 sideMenu.revalidate();
+		 sideMenu.repaint();
 		
 	}
 	
