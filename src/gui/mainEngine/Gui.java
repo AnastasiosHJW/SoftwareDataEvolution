@@ -348,9 +348,9 @@ public class Gui extends JFrame implements ActionListener{
 		zoomInButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-				tableData.setRowHeight(rowHeight+2);
-				tableData.setColumnWidth(columnWidth+1);
-				tableData.getZoomAreaTable().setZoom(rowHeight,columnWidth);
+				tableData.setRowHeight(tableData.getRowHeight()+2);
+				tableData.setColumnWidth(tableData.getColumnWidth()+1);
+				tableData.getZoomAreaTable().setZoom(tableData.getRowHeight(),tableData.getColumnWidth());
 				
 			}
 		});
@@ -361,8 +361,8 @@ public class Gui extends JFrame implements ActionListener{
 		zoomOutButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-				tableData.setRowHeight(rowHeight-2);
-				tableData.setColumnWidth(columnWidth-1);
+				tableData.setRowHeight(tableData.getRowHeight()-2);
+				tableData.setColumnWidth(tableData.getColumnWidth()-1);
 				if(tableData.getRowHeight()<1){
 					tableData.setRowHeight(1);
 				}
@@ -459,6 +459,7 @@ public class Gui extends JFrame implements ActionListener{
 		showDetails = new ShowDetailsComponents(descriptionText, tabbedPane, tmpScrollPaneZoomArea, zoomModel, zoomAreaTable, lifeTimePanel, undoButton);
 		
 		globalManager = new GlobalManager();
+		tableData = new TableData();
 		
 		tableUpdater = new TableUpdater(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
 				zoomModel, generalModel, descriptionText);
@@ -467,7 +468,7 @@ public class Gui extends JFrame implements ActionListener{
  treeScrollPane, tableData.getSelectedFromTree(),  tableData);
 		tableUpdater.setShowDetails(showDetails);
 		
-		tableData = new TableData();
+		
 		tableUpdater.setManagers(globalManager.getTableManager(),globalManager.getClusterManager());
 		
 		
