@@ -406,6 +406,7 @@ public class Gui extends JFrame implements ActionListener{
 				if (tableData.getFirstLevelUndoColumnsZoomArea()!=null) {
 					tableData.setFinalColumnsZoomArea(firstLevelUndoColumnsZoomArea);
 					tableData.setFinalRowsZoomArea(firstLevelUndoRowsZoomArea);
+					//TODO see how to change this
 					makeZoomAreaTableForCluster();
 				}
 				
@@ -434,6 +435,7 @@ public class Gui extends JFrame implements ActionListener{
 		notUniformlyDistributedButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
+				//TODO change this
 				tableData.getLifeTimeTable().notUniformlyDistributed(globalDataKeeper);
 			    
 			  } 
