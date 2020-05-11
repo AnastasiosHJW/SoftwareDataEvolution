@@ -6,10 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataKeeper.GlobalManager;
 import data.dataKeeper.TableData;
-import gui.mainEngine.Gui;
 import gui.tableElements.tableConstructors.TableConstructionAllSquaresIncluded;
 
 public class ShowLifetimeTableActionListener implements ActionListener {
