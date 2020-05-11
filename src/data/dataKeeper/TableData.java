@@ -181,21 +181,7 @@ public class TableData {
 	{
 		
 		StringBuilder sb = new StringBuilder();
-		sb.append("Segment size:\n");
-		for (int i=0;i<4;i++) {
-			sb.append(segmentSize[i]);
-			sb.append("\n");
-		}
-		sb.append("Segment size zoom area:\n");
-		for (int i=0;i<4;i++) {
-			sb.append(segmentSizeZoomArea[i]);
-			sb.append("\n");
-		}
-		sb.append("Segment size detailed table:\n");
-		for (int i=0;i<3;i++) {
-			sb.append(segmentSizeDetailedTable[i]);
-			sb.append("\n");
-		}
+		
 		sb.append("Final columns: \n");
 		for (int i=0;i<finalColumns.length;i++)
 		{
@@ -213,90 +199,6 @@ public class TableData {
 			}
 			sb.append("\n");
 		}
-		
-		/*
-		sb.append("Selected rows from mouse:\n");
-		for (int i=0;i<selectedRowsFromMouse.length;i++) {
-			sb.append(selectedRowsFromMouse[i]);
-			sb.append("\n");
-		}
-		*/
-		
-		if (finalColumnsZoomArea!=null && finalRowsZoomArea!=null) {
-			sb.append("Final columns zoom area: \n");
-			for (int i=0;i<finalColumnsZoomArea.length;i++)
-			{
-				sb.append(finalColumnsZoomArea[i]);
-				sb.append("\n");
-			}
-			
-			sb.append("Final rows zoom area: \n");
-			for (int i=0;i<finalRowsZoomArea.length;i++)
-			{
-				for (int j=0;j<finalRowsZoomArea[i].length;j++)
-				{
-					sb.append(finalRowsZoomArea[i][j]);
-					sb.append("\n");
-				}
-				sb.append("\n");
-			}
-		
-		}
-		
-		
-		
-		if (firstLevelUndoColumnsZoomArea!=null && firstLevelUndoRowsZoomArea!=null)
-		{
-			sb.append("First level undo columns zoom area: \n");
-			for (int i=0;i<firstLevelUndoColumnsZoomArea.length;i++)
-			{
-				sb.append(firstLevelUndoColumnsZoomArea[i]);
-				sb.append("\n");
-			}
-			
-			sb.append("First level undo rows zoom area: \n");
-			for (int i=0;i<firstLevelUndoRowsZoomArea.length;i++)
-			{
-				for (int j=0;j<firstLevelUndoRowsZoomArea[i].length;j++)
-				{
-					sb.append(firstLevelUndoRowsZoomArea[i][j]);
-					sb.append("\n");
-				}
-				sb.append("\n");
-			}
-			
-		}
-		
-		
-		/*
-		sb.append("Selected column: ");
-		sb.append(selectedColumn);
-		sb.append("\n");
-		
-		sb.append("Selected column zoom area: ");
-		sb.append(selectedColumnZoomArea);
-		sb.append("\n");
-		*/
-			
-		sb.append("Whole col: ");
-		sb.append(wholeCol);
-		sb.append("\n");
-		
-		sb.append("Whole col zoom area: ");
-		sb.append(wholeColZoomArea);
-		sb.append("\n");
-		
-		sb.append("Row height: ");
-		sb.append(rowHeight);
-		sb.append("\n");
-		
-		sb.append("Column width: ");
-		sb.append(columnWidth);
-		sb.append("\n");
-		
-		sb.append("Showing PLD: ");
-		sb.append(showingPld);
-		sb.append("\n");
 		
 		return sb.toString();
 	}

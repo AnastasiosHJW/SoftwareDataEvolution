@@ -6,11 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.table.TableModel;
 
 import org.antlr.v4.runtime.RecognitionException;
 import org.junit.After;
@@ -18,15 +14,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import data.dataKeeper.*;
+import data.dataKeeper.GlobalManager;
+import data.dataKeeper.TableData;
 import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
-import gui.tableElements.commons.JvTable;
-import gui.tableElements.commons.MyTableModel;
+import gui.tableElements.tableConstructors.TableConstructionIDU;
 
-public class TestLoadProject {
+public class TestShowPLD {
 
-	
 	private GlobalManager globalManager;
 	private static String[] projectName;
 	private static String[] fileName;
@@ -39,7 +34,7 @@ public class TestLoadProject {
 		
 		String sourcePath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\filesHandler\\inis\\";
 		String testPath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\TestData\\";
-		testFilename = testPath+ "LoadProject_";
+		testFilename = testPath+ "ShowPLD_";
 		
 		projectName[0] = "Atlas";
 		projectName[1] = "bioSQL";
@@ -73,10 +68,10 @@ public class TestLoadProject {
 	public void tearDown() throws Exception {
 	}
 
+
 	@Test
-	public void test(){
-		
-		
+	public void test() {
+
 		for (int i=0;i<8;i++)
 		{
 			
@@ -94,21 +89,27 @@ public class TestLoadProject {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+		
+			TableConstructionIDU table=new TableConstructionIDU(globalManager.getTableManager().getAllPPLSchemas(), globalManager.getTableManager().getAllPPLTransitions());
+			final String[] columns=table.constructColumns();
+			final String[][] rows=table.constructRows();
+			tableData.setSegmentSizeZoomArea(table.getSegmentSize());
+
+			tableData.setFinalColumnsZoomArea(columns);
+			tableData.setFinalRowsZoomArea(rows);
+			//tableUpdater.makeGeneralTableIDU(tableData);
+			//treeManager.fillTree(globalManager.getTableManager());
+		
 			String testFile = testFilename+projectName[i];
 			System.out.println(testFile);
 			String baselineDataString = readFileString(testFile);
 			
 			assertEquals(tableData.getTableDataString(), baselineDataString);
-			
+		
 		}
-		
-
-		
-		
 	}
 	
-	private String readFileString(String file)
+private String readFileString(String file)
 	
 	{
 		StringBuilder sBuilder = new StringBuilder();
@@ -129,5 +130,6 @@ public class TestLoadProject {
 	    return sBuilder.toString();
 	    
 	}
+
 
 }

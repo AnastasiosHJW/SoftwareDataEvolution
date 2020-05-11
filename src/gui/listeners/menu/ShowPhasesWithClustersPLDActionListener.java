@@ -84,7 +84,7 @@ public class ShowPhasesWithClustersPLDActionListener implements ActionListener {
 				mainEngine.connectTransitionsWithPhases(globalManager.getTableManager().getAllPPLTransitions());
 				clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
 				TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalManager.getTableManager().getAllPPLSchemas(), globalManager.getTableManager().getAllPPLTables(),clusterManager.getBirthWeight(),clusterManager.getDeathWeight(),clusterManager.getChangeWeightCl());
-				mainEngine2.extractClusters(clusterManager.getNumberOfClusters());
+				mainEngine2.extractClusters2(clusterManager.getNumberOfClusters());
 				clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
 				mainEngine2.print();
 				
