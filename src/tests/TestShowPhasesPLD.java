@@ -36,9 +36,12 @@ public class TestShowPhasesPLD {
 	public static void setUpBeforeClass()
 	{
 		projectName = new String[8];
-		
-		String sourcePath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\filesHandler\\inis\\";
-		String testPath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\TestData\\";
+
+		//String sourcePath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\filesHandler\\inis\\";
+		String sourcePath = ".\\filesHandler\\inis\\";
+		//String testPath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\TestData\\";
+		String testPath = ".\\TestData\\";
+
 		testFilename = testPath+ "ShowPhasesPLD_";
 		
 		projectName[0] = "Atlas";
@@ -72,7 +75,7 @@ public class TestShowPhasesPLD {
 	@Test
 	public void test() {
 
-		for (int i=0;i<8;i++)
+		for (int i=1;i<8;i++)
 		{
 		
 			TableData tableData = new TableData();

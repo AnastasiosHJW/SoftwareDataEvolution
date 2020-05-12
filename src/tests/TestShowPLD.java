@@ -32,8 +32,10 @@ public class TestShowPLD {
 	{
 		projectName = new String[8];
 		
-		String sourcePath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\filesHandler\\inis\\";
-		String testPath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\TestData\\";
+		//String sourcePath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\filesHandler\\inis\\";
+		String sourcePath = ".\\filesHandler\\inis\\";
+		//String testPath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\TestData\\";
+		String testPath = ".\\TestData\\";
 		testFilename = testPath+ "ShowPLD_";
 		
 		projectName[0] = "Atlas";
