@@ -5,6 +5,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import data.dataKeeper.GlobalDataKeeper;
+import data.dataKeeper.GlobalManager;
 
 public class JvTable extends JTable {
 
@@ -58,15 +59,15 @@ public class JvTable extends JTable {
     }
    
     
-    public void notUniformlyDistributed(GlobalDataKeeper globalDataKeeper){
+    public void notUniformlyDistributed(GlobalManager globalManager){
     	for(int i=0; i<super.getColumnCount(); i++){
     		if(i==0){
     			super.getColumnModel().getColumn(0).setPreferredWidth(60);
     			
     		}
     		else{
-    			int tot=750/globalDataKeeper.getAllPPLTransitions().size();
-    			int sizeOfColumn=globalDataKeeper.getPhaseCollectors().get(0).getPhases().get(i-1).getSize()*tot;
+    			int tot=750/globalManager.getTableManager().getAllPPLTransitions().size();
+    			int sizeOfColumn=globalManager.getClusterManager().getPhaseCollectors().get(0).getPhases().get(i-1).getSize()*tot;
     			super.getColumnModel().getColumn(i).setPreferredWidth(sizeOfColumn);
     			
     		}

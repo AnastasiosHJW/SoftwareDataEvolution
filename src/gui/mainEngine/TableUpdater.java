@@ -1,7 +1,5 @@
 package gui.mainEngine;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,12 +12,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import data.dataKeeper.ClusterManager;
 import data.dataKeeper.TableData;
 import data.dataKeeper.TableManager;

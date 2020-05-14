@@ -2,6 +2,9 @@ package gui.listeners.menu;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
@@ -96,6 +99,7 @@ public class ShowPhasesPLDActionListener implements ActionListener {
 					tabbedPane.setSelectedIndex(0);
 					tableUpdater.makeGeneralTablePhases(tableData);
 					treeManager.fillPhasesTree(globalManager);
+					saveTableDataString();
 				}
 				else{
 					JOptionPane.showMessageDialog(null, "Extract Phases first");
@@ -109,6 +113,51 @@ public class ShowPhasesPLDActionListener implements ActionListener {
 		}
 		
 		
+	}
+	
+	
+	public String getTableDataString()
+	{
+		
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Final columns: \n");
+		for (int i=0;i<tableData.getFinalColumns().length;i++)
+		{
+			sb.append(tableData.getFinalColumns()[i]);
+			sb.append("\n");
+		}
+		
+		sb.append("Final rows: \n");
+		for (int i=0;i<tableData.getFinalRows().length;i++)
+		{
+			for (int j=0;j<tableData.getFinalRows()[i].length;j++)
+			{
+				sb.append(tableData.getFinalRows()[i][j]);
+				sb.append("\n");
+			}
+			sb.append("\n");
+		}
+		
+		return sb.toString();
+	}
+
+	public void saveTableDataString()
+	{
+		String basepath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3";
+		String testFile = basepath + "AtlasPhases";
+		
+		String testData = getTableDataString();
+		
+		BufferedWriter writer;
+		try {
+			writer = new BufferedWriter(new FileWriter(testFile));
+			writer.write(testData);
+			writer.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

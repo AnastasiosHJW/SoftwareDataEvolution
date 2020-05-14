@@ -19,6 +19,7 @@ import data.dataKeeper.GlobalManager;
 import data.dataKeeper.ProjectManager;
 import data.dataKeeper.TableData;
 import gui.dialogs.ParametersJDialog;
+import gui.mainEngine.Gui;
 import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
 import gui.tableElements.tableConstructors.TableConstructionPhases;
@@ -28,7 +29,7 @@ import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 
 public class TestShowPhasesWithClustersPLD {
 	
-	private GlobalManager globalManager;
+	private Gui gui;
 	private static String[] projectName;
 	private static String[] fileName;
 	private static String testFilename;
@@ -70,23 +71,25 @@ public class TestShowPhasesWithClustersPLD {
 	@Before
 	public void setUp() throws Exception
 	{
-		globalManager = new GlobalManager();
+		gui = new Gui();
 	}
 
 	@Test
 	public void test() {
+		
 
 		for (int i=2;i<5;i++)
 		{
+			GlobalManager globalManager = gui.getGlobalManager();
+			TreeManager treeManager = gui.getTreeManager();
+			TableUpdater tableUpdater = gui.getTableUpdater();
+			TableData tableData = gui.getTableData();
+			JTabbedPane tab = gui.getTabbedPane();
 		
-			TableData tableData = new TableData();
 		
 			try {
-				TreeManager treeManager = null;
-				TableUpdater aux = null;
-				JTabbedPane tab = null;
 			
-				globalManager.importData(fileName[i], treeManager, tableData ,aux, tab);
+				globalManager.importData(fileName[i], treeManager, tableData ,tableUpdater, tab);
 			
 			} catch (RecognitionException e) {
 				e.printStackTrace();
@@ -99,13 +102,6 @@ public class TestShowPhasesWithClustersPLD {
 			ClusterManager clusterManager = globalManager.getClusterManager();
 			if(!(projectManager.getProject()==null)){
 				
-				//ParametersJDialog jD=new ParametersJDialog(true);
-				
-				//jD.setModal(true);
-				
-				//jD.setVisible(true);
-				
-				if(true)//jD.getConfirmation()){
 				
 		            clusterManager.setTimeWeight((float) 0.5);
 		            clusterManager.setChangeWeight((float) 0.5);
@@ -124,16 +120,6 @@ public class TestShowPhasesWithClustersPLD {
 					mainEngine.parseInput();		
 					System.out.println("\n\n\n");
 					mainEngine.extractPhases(clusterManager.getNumberOfPhases());
-					/*try {
-						mainEngine.extractReportAssessment1();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					try {
-						mainEngine.extractReportAssessment2();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}*/
 					
 					mainEngine.connectTransitionsWithPhases(globalManager.getTableManager().getAllPPLTransitions());
 					clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
@@ -152,9 +138,9 @@ public class TestShowPhasesWithClustersPLD {
 
 						tableData.setFinalColumns(columns);
 						tableData.setFinalRows(rows);
-						//tabbedPane.setSelectedIndex(0);
-						//tableUpdater.makeGeneralTablePhases(tableData);
-						//treeManager.fillClustersTree(clusterManager);
+						tab.setSelectedIndex(0);
+						tableUpdater.makeGeneralTablePhases(tableData);
+						treeManager.fillClustersTree(clusterManager);
 
 					}
 					else{
@@ -162,11 +148,6 @@ public class TestShowPhasesWithClustersPLD {
 					}
 				}
 			
-			//else{
-				
-				//JOptionPane.showMessageDialog(null, "Please select a project first!");
-				
-			//}
 			
 				String testFile = testFilename+projectName[i];
 				System.out.println(testFile);

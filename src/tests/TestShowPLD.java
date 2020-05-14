@@ -16,13 +16,14 @@ import org.junit.Test;
 
 import data.dataKeeper.GlobalManager;
 import data.dataKeeper.TableData;
+import gui.mainEngine.Gui;
 import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
 import gui.tableElements.tableConstructors.TableConstructionIDU;
 
 public class TestShowPLD {
 
-	private GlobalManager globalManager;
+	private Gui gui;
 	private static String[] projectName;
 	private static String[] fileName;
 	private static String testFilename;
@@ -63,7 +64,7 @@ public class TestShowPLD {
 	@Before
 	public void setUp() throws Exception
 	{
-		globalManager = new GlobalManager();
+		gui = new Gui();
 	}
 
 	@After
@@ -77,14 +78,15 @@ public class TestShowPLD {
 		for (int i=0;i<8;i++)
 		{
 			
-			TableData tableData = new TableData();
+			GlobalManager globalManager = gui.getGlobalManager();
+			TreeManager treeManager = gui.getTreeManager();
+			TableUpdater tableUpdater = gui.getTableUpdater();
+			TableData tableData = gui.getTableData();
+			JTabbedPane tab = gui.getTabbedPane();
 			
 			try {
-				TreeManager treeManager = null;
-				TableUpdater aux = null;
-				JTabbedPane tab = null;
 				
-				globalManager.importData(fileName[i], treeManager, tableData ,aux, tab);
+				globalManager.importData(fileName[i], treeManager, tableData ,tableUpdater, tab);
 				
 			} catch (RecognitionException e) {
 				e.printStackTrace();
@@ -99,8 +101,8 @@ public class TestShowPLD {
 
 			tableData.setFinalColumnsZoomArea(columns);
 			tableData.setFinalRowsZoomArea(rows);
-			//tableUpdater.makeGeneralTableIDU(tableData);
-			//treeManager.fillTree(globalManager.getTableManager());
+			tableUpdater.makeGeneralTableIDU(tableData);
+			treeManager.fillTree(globalManager.getTableManager());
 		
 			String testFile = testFilename+projectName[i];
 			System.out.println(testFile);

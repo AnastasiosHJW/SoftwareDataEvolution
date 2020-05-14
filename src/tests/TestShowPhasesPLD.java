@@ -3,10 +3,10 @@ package tests;
 import static org.junit.Assert.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
 import org.antlr.v4.runtime.RecognitionException;
@@ -19,7 +19,7 @@ import data.dataKeeper.ClusterManager;
 import data.dataKeeper.GlobalManager;
 import data.dataKeeper.ProjectManager;
 import data.dataKeeper.TableData;
-import gui.dialogs.ParametersJDialog;
+import gui.mainEngine.Gui;
 import gui.mainEngine.TableUpdater;
 import gui.mainEngine.TreeManager;
 import gui.tableElements.tableConstructors.TableConstructionPhases;
@@ -27,7 +27,7 @@ import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
 
 public class TestShowPhasesPLD {
 
-	private GlobalManager globalManager;
+	private Gui gui;
 	private static String[] projectName;
 	private static String[] fileName;
 	private static String testFilename;
@@ -36,12 +36,11 @@ public class TestShowPhasesPLD {
 	public static void setUpBeforeClass()
 	{
 		projectName = new String[8];
-
+		
 		//String sourcePath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\filesHandler\\inis\\";
 		String sourcePath = ".\\filesHandler\\inis\\";
 		//String testPath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\TestData\\";
 		String testPath = ".\\TestData\\";
-
 		testFilename = testPath+ "ShowPhasesPLD_";
 		
 		projectName[0] = "Atlas";
@@ -69,31 +68,40 @@ public class TestShowPhasesPLD {
 	@Before
 	public void setUp() throws Exception
 	{
-		globalManager = new GlobalManager();
+		gui = new Gui();
+	}
+
+	@After
+	public void tearDown() throws Exception {
 	}
 
 	@Test
-	public void test() {
-
-		for (int i=1;i<8;i++)
+	public void test(){
+		
+		
+		for (int i=0;i<8;i++)
 		{
-		
-			TableData tableData = new TableData();
-		
+			GlobalManager globalManager = gui.getGlobalManager();
+			TreeManager treeManager = gui.getTreeManager();
+			TableUpdater tableUpdater = gui.getTableUpdater();
+			TableData tableData = gui.getTableData();
+			JTabbedPane tab = gui.getTabbedPane();
+			
+			
 			try {
-				TreeManager treeManager = null;
-				TableUpdater aux = null;
-				JTabbedPane tab = null;
-			
-				globalManager.importData(fileName[i], treeManager, tableData ,aux, tab);
-			
+				globalManager.importData(fileName[i], treeManager, tableData ,tableUpdater, tab);
+				
 			} catch (RecognitionException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	
+			
 			ProjectManager projectManager = globalManager.getProjectManager();
+			
+			File f = new File(fileName[i]);
+			projectManager.setProject(f.getName());
+			
 			if(!(projectManager.getProject()==null)){
 				tableData.setWholeCol(-1);
 				
@@ -133,42 +141,46 @@ public class TestShowPhasesPLD {
 						//treeManager.fillPhasesTree(globalManager);
 					}
 					else{
+						System.out.println("0 phases");
 						//JOptionPane.showMessageDialog(null, "Extract Phases first");
 					}
 				}
-			
-				String testFile = testFilename+projectName[i];
-				System.out.println(testFile);
-				String baselineDataString = readFileString(testFile);
-		
-				assertEquals(tableData.getTableDataString(), baselineDataString);
+			else {
+				System.out.println("no project");
 			}
-	
 			
-	
+			String testFile = testFilename+projectName[i];
+			System.out.println(testFile);
+			String baselineDataString = readFileString(testFile);
+			assertEquals(tableData.getTableDataString(), baselineDataString);
+			
+		}
+		
+
+		
+		
 	}
-
+	
 	private String readFileString(String file)
-
+	
 	{
 		StringBuilder sBuilder = new StringBuilder();
-	
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) 
-		{
- 
-			String sCurrentLine;
-			while ((sCurrentLine = br.readLine()) != null) 
-			{
-				sBuilder.append(sCurrentLine).append("\n");
-			}
-		} 
-		catch (IOException e) 
-		{
-			e.printStackTrace();
-		}
-		return sBuilder.toString();
-    
+		
+	    try (BufferedReader br = new BufferedReader(new FileReader(file))) 
+	    {
+	 
+	        String sCurrentLine;
+	        while ((sCurrentLine = br.readLine()) != null) 
+	        {
+	            sBuilder.append(sCurrentLine).append("\n");
+	        }
+	    } 
+	    catch (IOException e) 
+	    {
+	        e.printStackTrace();
+	    }
+	    return sBuilder.toString();
+	    
 	}
-
 
 }

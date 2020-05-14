@@ -19,15 +19,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import data.dataKeeper.*;
-import gui.mainEngine.TableUpdater;
-import gui.mainEngine.TreeManager;
+import gui.mainEngine.*;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 
 public class TestLoadProject {
 
-	
-	private GlobalManager globalManager;
+	private Gui gui;
 	private static String[] projectName;
 	private static String[] fileName;
 	private static String testFilename;
@@ -68,7 +66,7 @@ public class TestLoadProject {
 	@Before
 	public void setUp() throws Exception
 	{
-		globalManager = new GlobalManager();
+		gui = new Gui();
 	}
 
 	@After
@@ -81,15 +79,15 @@ public class TestLoadProject {
 		
 		for (int i=0;i<8;i++)
 		{
+			GlobalManager globalManager = gui.getGlobalManager();
+			TreeManager treeManager = gui.getTreeManager();
+			TableUpdater tableUpdater = gui.getTableUpdater();
+			TableData tableData = gui.getTableData();
+			JTabbedPane tab = gui.getTabbedPane();
 			
-			TableData tableData = new TableData();
 			
 			try {
-				TreeManager treeManager = null;
-				TableUpdater aux = null;
-				JTabbedPane tab = null;
-				
-				globalManager.importData(fileName[i], treeManager, tableData ,aux, tab);
+				globalManager.importData(fileName[i], treeManager, tableData ,tableUpdater, tab);
 				
 			} catch (RecognitionException e) {
 				e.printStackTrace();
