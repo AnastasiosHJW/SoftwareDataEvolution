@@ -12,34 +12,9 @@ import phaseAnalyzer.commons.TransitionHistory;
 import phaseAnalyzer.parser.IParser;
 import phaseAnalyzer.parser.ParserFactory;
 import data.dataKeeper.ClusterManager;
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplTransition.PPLTransition;
 
 public class PhaseAnalyzerMainEngine {
-	
-	//to be deprecated
-	public PhaseAnalyzerMainEngine(String inputCsv,String outputAssessment1,String outputAssessment2,Float tmpTimeWeight, Float tmpChangeWeight,
-														Boolean tmpPreProcessingTime,Boolean tmpPreProcessingChange){
-		
-		timeWeight=tmpTimeWeight;
-		changeWeight=tmpChangeWeight;
-		preProcessingTime=tmpPreProcessingTime;
-		preProcessingChange=tmpPreProcessingChange;
-		
-		this.inputCsv=inputCsv;
-		
-		parserFactory = new ParserFactory();
-		parser = parserFactory.createParser("SimpleTextParser");
-
-		phaseExtractorFactory = new PhaseExtractorFactory();
-		phaseExtractor = phaseExtractorFactory.createPhaseExtractor("BottomUpPhaseExtractor");
-		
-		transitionHistory = new TransitionHistory();
-		
-		allPhaseCollectors = new HashMap<String, ArrayList<PhaseCollector>>();
-		
-	}
-
 
 	public PhaseAnalyzerMainEngine(String inputCsv,String outputAssessment1,String outputAssessment2,ClusterManager clusterManager){
 		
@@ -74,11 +49,6 @@ public class PhaseAnalyzerMainEngine {
 		phaseCollectors.add(phaseCollector);
 		
 		allPhaseCollectors.put(inputCsv, phaseCollectors);
-	}
-	
-	//to be deprecated
-	public void connectTransitionsWithPhases(GlobalDataKeeper tmpGlobalDataKeeper){
-		phaseCollectors.get(0).connectPhasesWithTransitions(tmpGlobalDataKeeper);
 	}
 	
 	public void connectTransitionsWithPhases(TreeMap<Integer,PPLTransition> PPLTransitions){

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataKeeper.TableManager;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
@@ -27,13 +26,6 @@ public class TableConstructionAllSquaresIncluded implements PldConstruction {
 	private int maxUpdates=1;
 	private Integer segmentSize[]=new Integer[3];
 	
-	public TableConstructionAllSquaresIncluded(GlobalDataKeeper globalDataKeeper){
-		
-		allPPLSchemas=globalDataKeeper.getAllPPLSchemas();
-		allPPLTransitions=globalDataKeeper.getAllPPLTransitions();
-		
-		
-	}
 	
 	public TableConstructionAllSquaresIncluded(TableManager tableManager){
 		

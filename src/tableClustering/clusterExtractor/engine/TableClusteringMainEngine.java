@@ -6,13 +6,11 @@ import java.util.TreeMap;
 import tableClustering.clusterExtractor.analysis.ClusterExtractor;
 import tableClustering.clusterExtractor.analysis.ClusterExtractorFactory;
 import tableClustering.clusterExtractor.commons.ClusterCollector;
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
 
 public class TableClusteringMainEngine {
 	
-	private GlobalDataKeeper dataKeeper;
 	private Double birthWeight;
 	private Double deathWeight;
 	private Double changeWeight;
@@ -24,22 +22,6 @@ public class TableClusteringMainEngine {
 	private TreeMap<String,PPLSchema> allPPLSchemas = null;
 	private TreeMap<String,PPLTable> allPPLTables = null;
 
-	//to be deprecated
-	public TableClusteringMainEngine(GlobalDataKeeper dataKeeper,Double birthWeight, Double deathWeight,
-			Double changeWeight){
-		
-		this.dataKeeper=dataKeeper;
-		this.birthWeight=birthWeight;
-		this.deathWeight=deathWeight;
-		this.changeWeight=changeWeight;
-		
-		clusterExtractorFactory = new ClusterExtractorFactory();
-		clusterExtractor = clusterExtractorFactory.createClusterExtractor("AgglomerativeClusterExtractor");
-		
-		allClusterCollectors = new ArrayList<ClusterCollector>();
-
-	}
-	
 
 	public TableClusteringMainEngine(TreeMap<String,PPLSchema> allPPLSchemas, TreeMap<String,PPLTable> allPPLTables,Double birthWeight, Double deathWeight,
 			Double changeWeight){
@@ -59,20 +41,8 @@ public class TableClusteringMainEngine {
 
 	}
 	
-	//to be deprecated
-	public void extractClusters(int numClusters){
-		
-		clusterCollectors = new ArrayList<ClusterCollector>();
-		ClusterCollector clusterCollector = new ClusterCollector();
-		clusterCollector = clusterExtractor.extractAtMostKClusters(dataKeeper, numClusters, birthWeight, deathWeight, changeWeight);
-		clusterCollector.sortClustersByBirthDeath();
-		clusterCollectors.add(clusterCollector);
-		
-		allClusterCollectors.add(clusterCollector);
-
-	}
 	
-	public void extractClusters2(int numClusters){
+	public void extractClusters(int numClusters){
 		
 		clusterCollectors = new ArrayList<ClusterCollector>();
 		ClusterCollector clusterCollector = new ClusterCollector();

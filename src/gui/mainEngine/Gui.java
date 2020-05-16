@@ -1,34 +1,19 @@
 package gui.mainEngine;
 
-//try to extract relationship beetween gui and pplSchema and pplTransition
 import gui.dialogs.CreateProjectJDialog;
 import gui.dialogs.EnlargeTable;
-import gui.dialogs.ParametersJDialog;
-import gui.dialogs.ProjectInfoDialog;
 import gui.listeners.menu.*;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.commons.ShowDetailsComponents;
-import gui.tableElements.tableConstructors.*;
-import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;
-import gui.tableElements.tableRenderers.IDUTableRenderer;
-import gui.treeElements.TreeConstructionGeneral;
-import gui.treeElements.TreeConstructionPhases;
-import gui.treeElements.TreeConstructionPhasesWithClusters;
-
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,8 +21,6 @@ import java.util.ArrayList;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -45,29 +28,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.tree.TreePath;
-
 import org.antlr.v4.runtime.RecognitionException;
 
-import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
 import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 import tableClustering.clusterValidator.engine.ClusterValidatorMainEngine;
 import data.dataKeeper.*;
-import data.dataSorters.PldRowSorter;
 
 
 public class Gui extends JFrame implements ActionListener{
@@ -93,7 +63,6 @@ public class Gui extends JFrame implements ActionListener{
 	private JScrollPane tmpScrollPaneZoomArea =new JScrollPane();
 	
 	private ArrayList<Integer> selectedRows=new ArrayList<Integer>();
-	private GlobalDataKeeper globalDataKeeper=null;
 
 	private String project=null;
 
@@ -525,11 +494,11 @@ public class Gui extends JFrame implements ActionListener{
 			for(double wd=(1.0-wb); wd>=0.0; wd=wd-0.01){
 				
 					double wc=1.0-(wb+wd);
-					TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper,wb,wd,wc);
+					TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalManager.getTableManager().getAllPPLSchemas(),globalManager.getTableManager().getAllPPLTables(),wb,wd,wc);
 					mainEngine2.extractClusters(globalManager.getClusterManager().getNumberOfClusters());
-					globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
+					globalManager.getClusterManager().setClusterCollectors(mainEngine2.getClusterCollectors());
 					
-					ClusterValidatorMainEngine lala = new ClusterValidatorMainEngine(globalDataKeeper);
+					ClusterValidatorMainEngine lala = new ClusterValidatorMainEngine(globalManager);
 					lala.run();
 					
 					lalaString=lalaString+wb+"\t"+wd+"\t"+wc
@@ -569,11 +538,11 @@ public class Gui extends JFrame implements ActionListener{
 		String lalaString="Birth Weight:"+"\tDeath Weight:"+"\tChange Weight:"+"\n";
 		int counter=0;
 		
-		TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalDataKeeper,0.333,0.333,0.333);
+		TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalManager.getTableManager().getAllPPLSchemas(),globalManager.getTableManager().getAllPPLTables(),0.333,0.333,0.333);
 		mainEngine2.extractClusters(4);
-		globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
+		globalManager.getClusterManager().setClusterCollectors(mainEngine2.getClusterCollectors());
 		
-		ClusterValidatorMainEngine lala = new ClusterValidatorMainEngine(globalDataKeeper);
+		ClusterValidatorMainEngine lala = new ClusterValidatorMainEngine(globalManager);
 		lala.run();
 		
 		lalaString=lalaString+"\n"+"0.333"+"\t"+"0.333"+"\t"+"0.333"
@@ -584,11 +553,11 @@ public class Gui extends JFrame implements ActionListener{
 			for(double wd=(1.0-wb); wd>=0.0; wd=wd-0.5){
 				
 					double wc=1.0-(wb+wd);
-					mainEngine2 = new TableClusteringMainEngine(globalDataKeeper,wb,wd,wc);
+					mainEngine2 = new TableClusteringMainEngine(globalManager.getTableManager().getAllPPLSchemas(),globalManager.getTableManager().getAllPPLTables(),wb,wd,wc);
 					mainEngine2.extractClusters(4);
-					globalDataKeeper.setClusterCollectors(mainEngine2.getClusterCollectors());
+					globalManager.getClusterManager().setClusterCollectors(mainEngine2.getClusterCollectors());
 					
-					lala = new ClusterValidatorMainEngine(globalDataKeeper);
+					lala = new ClusterValidatorMainEngine(globalManager);
 					lala.run();
 					
 					lalaString=lalaString+"\n"+wb+"\t"+wd+"\t"+wc

@@ -116,8 +116,7 @@ public class TestShowPhasesPLD {
 		            
 		            System.out.println(clusterManager.getTimeWeight()+" "+clusterManager.getChangeWeight());
 		            
-					PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),
-							clusterManager.getTimeWeight(),clusterManager.getChangeWeight(),clusterManager.getPreProcessingTime(),clusterManager.getPreProcessingChange());
+					PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(), clusterManager);
 
 					mainEngine.parseInput();		
 					System.out.println("\n\n\n");

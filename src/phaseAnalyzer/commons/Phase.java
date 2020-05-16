@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplTransition.PPLTransition;
 
 public class Phase {
@@ -158,34 +157,6 @@ public class Phase {
 		
 		return newPhase;
 	}
-	//to be deprecated
-	public void connectWithPPLTransitions(GlobalDataKeeper tmpGlobalDataKeeper){
-		
-		TreeMap<Integer,PPLTransition> allPPLTransitions=tmpGlobalDataKeeper.getAllPPLTransitions();
-		
-		boolean found = false;
-
-		for (Map.Entry<Integer,PPLTransition> tr : allPPLTransitions.entrySet()) {
-			
-			if(tr.getValue().getOldVersionName().equals(startSQLFile)){
-				
-				found=true;
-				
-			}
-			if(found) {
-				this.phasePPLTransitions.put(tr.getKey(), tr.getValue());
-
-			}
-			if(tr.getValue().getNewVersionName().equals(endSQLFile)){
-				
-				break;				
-			}
-		}
-		System.out.println(startPos+" "+startSQLFile+" "+endPos+" "+endSQLFile);
-		
-		
-	}
-	
 
 	public void connectWithPPLTransitions(TreeMap<Integer,PPLTransition> PPLTransitions){
 		

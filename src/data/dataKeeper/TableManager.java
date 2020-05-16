@@ -44,7 +44,6 @@ public class TableManager {
 	private TreeMap<Integer,PPLTransition> allPPLTransitions = null;
 	private String 	projectDataFolder=null;
 	
-	private String testString;
 	
 	public TableManager()
 	{
@@ -195,7 +194,7 @@ public class TableManager {
 		mainEngine.connectTransitionsWithPhases(allPPLTransitions);
 		clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
 		TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(allPPLSchemas, allPPLTables,b,d,c);
-		mainEngine2.extractClusters2(clusterManager.getNumberOfClusters());
+		mainEngine2.extractClusters(clusterManager.getNumberOfClusters());
 		clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
 		mainEngine2.print();
 		

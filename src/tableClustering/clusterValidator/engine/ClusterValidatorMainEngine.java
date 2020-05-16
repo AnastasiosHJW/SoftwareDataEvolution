@@ -17,12 +17,12 @@ import tableClustering.clusterValidator.clusterValidityMetrics.internalEvaluatio
 import tableClustering.clusterValidator.commons.Centroid;
 import tableClustering.clusterValidator.commons.ClassOfObjects;
 import tableClustering.clusterValidator.commons.ClusterInfoKeeper;
-import data.dataKeeper.GlobalDataKeeper;
+import data.dataKeeper.GlobalManager;
 import data.dataPPL.pplSQLSchema.PPLTable;
 
 public class ClusterValidatorMainEngine {
 	
-	private GlobalDataKeeper globalDataKeeper=null;
+	private GlobalManager globalManager;
 	private ArrayList<ClusterInfoKeeper> clusterInfoKeepers= new ArrayList<ClusterInfoKeeper>();
 	private Centroid overallCentroid = null;
 	private Double totalCohesion = null;
@@ -31,8 +31,8 @@ public class ClusterValidatorMainEngine {
 
 	private ArrayList<ClassOfObjects> classesOfObjects = new ArrayList<ClassOfObjects>();
 	
-	public ClusterValidatorMainEngine(GlobalDataKeeper globalDataKeeper) throws IOException{
-		this.globalDataKeeper=globalDataKeeper;
+	public ClusterValidatorMainEngine(GlobalManager globalManager) throws IOException{
+		this.globalManager=globalManager;
 		initialize();
 
 	}
@@ -48,7 +48,7 @@ public class ClusterValidatorMainEngine {
 		totalSeparation=totalSeparationMetricCalculator.getResult();
 		
 		
-		ExternalTotalMetrics totalEntropyCalculator = new TotalEntropyMetric(clusterInfoKeepers, globalDataKeeper.getAllPPLTables().size());
+		ExternalTotalMetrics totalEntropyCalculator = new TotalEntropyMetric(clusterInfoKeepers, globalManager.getTableManager().getAllPPLTables().size());
 		totalEntropyCalculator.compute();
 		totalEntropy = totalEntropyCalculator.getResult();
 		
@@ -65,7 +65,7 @@ public class ClusterValidatorMainEngine {
 	}
 
 	private void initializeClusterInfoKeepers() {
-		ArrayList<Cluster> clusters = globalDataKeeper.getClusterCollectors().get(0).getClusters();
+		ArrayList<Cluster> clusters = globalManager.getClusterManager().getClusterCollectors().get(0).getClusters();
 		
 		Iterator<Cluster> clusterIterator = clusters.iterator();
 		int classIndex =0;
@@ -84,7 +84,7 @@ public class ClusterValidatorMainEngine {
 	
 	private void initializeOverallCentroid(){
 		
-		TreeMap<String, PPLTable> tables= globalDataKeeper.getAllPPLTables();
+		TreeMap<String, PPLTable> tables= globalManager.getTableManager().getAllPPLTables();
 		double x=0;
 		double y=0;
 		double z=0;

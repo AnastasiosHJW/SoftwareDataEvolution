@@ -78,7 +78,7 @@ public class TestShowPhasesWithClustersPLD {
 	public void test() {
 		
 
-		for (int i=2;i<5;i++)
+		for (int i=0;i<8;i++)
 		{
 			GlobalManager globalManager = gui.getGlobalManager();
 			TreeManager treeManager = gui.getTreeManager();
@@ -115,8 +115,7 @@ public class TestShowPhasesWithClustersPLD {
 		            
 		            System.out.println(clusterManager.getTimeWeight()+" "+clusterManager.getChangeWeight());
 		            
-		            PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),
-							clusterManager.getTimeWeight(),clusterManager.getChangeWeight(),clusterManager.getPreProcessingTime(),clusterManager.getPreProcessingChange());
+		            PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),clusterManager);
 					mainEngine.parseInput();		
 					System.out.println("\n\n\n");
 					mainEngine.extractPhases(clusterManager.getNumberOfPhases());
@@ -124,7 +123,7 @@ public class TestShowPhasesWithClustersPLD {
 					mainEngine.connectTransitionsWithPhases(globalManager.getTableManager().getAllPPLTransitions());
 					clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
 					TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalManager.getTableManager().getAllPPLSchemas(), globalManager.getTableManager().getAllPPLTables(),clusterManager.getBirthWeight(),clusterManager.getDeathWeight(),clusterManager.getChangeWeightCl());
-					mainEngine2.extractClusters2(clusterManager.getNumberOfClusters());
+					mainEngine2.extractClusters(clusterManager.getNumberOfClusters());
 					clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
 					mainEngine2.print();
 					

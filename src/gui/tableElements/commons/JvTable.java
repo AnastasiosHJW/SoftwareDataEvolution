@@ -4,7 +4,6 @@ package gui.tableElements.commons;
 import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataKeeper.GlobalManager;
 
 public class JvTable extends JTable {

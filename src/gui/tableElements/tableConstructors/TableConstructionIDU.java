@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
 import data.dataPPL.pplTransition.AtomicChange;
@@ -27,14 +26,6 @@ public class TableConstructionIDU implements PldConstruction {
 
 	private Integer segmentSize[]=new Integer[4];
 	
-	//to be deprecated
-	public TableConstructionIDU(GlobalDataKeeper globalDataKeeper){
-		
-		allPPLSchemas=globalDataKeeper.getAllPPLSchemas();
-		allPPLTransitions=globalDataKeeper.getAllPPLTransitions();
-		
-		
-	}
 	
 	public TableConstructionIDU(TreeMap<String,PPLSchema> allPPLSchemas, TreeMap<Integer,PPLTransition> allPPLTransitions){
 		

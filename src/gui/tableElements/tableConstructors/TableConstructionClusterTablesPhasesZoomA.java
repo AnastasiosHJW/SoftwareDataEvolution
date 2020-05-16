@@ -6,7 +6,6 @@ import java.util.TreeMap;
 
 import phaseAnalyzer.commons.Phase;
 import data.dataKeeper.ClusterManager;
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataKeeper.TableManager;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
@@ -29,15 +28,7 @@ public class TableConstructionClusterTablesPhasesZoomA implements PldConstructio
 	private int maxTotalChangesForOneTr=1;
 	private Integer[] segmentSize=new Integer[4];
 	private ArrayList<String> tablesOfCluster=new ArrayList<String>();
-	
-	//to be deprecated
-	public TableConstructionClusterTablesPhasesZoomA(GlobalDataKeeper globalDataKeeper,ArrayList<String> tablesOfCluster){
-		
-		allPPLSchemas=globalDataKeeper.getAllPPLSchemas();
-		phases=globalDataKeeper.getPhaseCollectors().get(0).getPhases();
-		this.tablesOfCluster=tablesOfCluster;
-		
-	}
+
 	
 	public TableConstructionClusterTablesPhasesZoomA(TableManager tableManager, ClusterManager clusterManager,ArrayList<String> tablesOfCluster){
 		

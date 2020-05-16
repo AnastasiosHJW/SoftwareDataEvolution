@@ -92,7 +92,7 @@ public void makeGeneralTableIDU(final TableData tableData) {
 	
 		PldRowSorter sorter=new PldRowSorter(tableData.getFinalRowsZoomArea(),tableManager);
 		
-		tableData.setFinalRowsZoomArea(sorter.sortRows2());
+		tableData.setFinalRowsZoomArea(sorter.sortRows());
 	    
 		tableData.setShowingPld(true);
 		zoomInButton.setVisible(true);

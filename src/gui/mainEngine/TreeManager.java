@@ -21,7 +21,6 @@ import data.dataKeeper.ClusterManager;
 import data.dataKeeper.GlobalManager;
 import data.dataKeeper.TableData;
 import data.dataKeeper.TableManager;
-import gui.tableElements.commons.JvTable;
 import gui.treeElements.TreeConstructionGeneral;
 import gui.treeElements.TreeConstructionPhases;
 import gui.treeElements.TreeConstructionPhasesWithClusters;
@@ -56,7 +55,7 @@ public class TreeManager {
 		
 		
 		 TreeConstructionPhasesWithClusters tc=new TreeConstructionPhasesWithClusters(clusterManager);
-		 tablesTree=tc.constructTree2();
+		 tablesTree=tc.constructTree();
 		 
 		 tablesTree.addTreeSelectionListener(new TreeSelectionListener () {
 			    public void valueChanged(TreeSelectionEvent ae) { 
@@ -113,7 +112,7 @@ public class TreeManager {
 		
 		 TreeConstructionGeneral tc=new TreeConstructionGeneral(tableManager);
 		 tablesTree=new JTree();
-		 tablesTree=tc.constructTree2();
+		 tablesTree=tc.constructTree();
 		 tablesTree.addTreeSelectionListener(new TreeSelectionListener () {
 			    public void valueChanged(TreeSelectionEvent ae) { 
 			    	TreePath selection = ae.getPath();

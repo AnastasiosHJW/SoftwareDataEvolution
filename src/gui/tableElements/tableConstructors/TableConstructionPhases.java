@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import phaseAnalyzer.commons.Phase;
-import data.dataKeeper.GlobalDataKeeper;
 import data.dataKeeper.GlobalManager;
 import data.dataPPL.pplSQLSchema.PPLSchema;
 import data.dataPPL.pplSQLSchema.PPLTable;
@@ -29,14 +28,6 @@ public class TableConstructionPhases implements PldConstruction {
 	private int maxTotalChangesForOneTr=1;
 	private Integer[] segmentSize=new Integer[4];
 	
-	//to be deprecated
-	public TableConstructionPhases(GlobalDataKeeper globalDataKeeper){
-		
-		allPPLSchemas=globalDataKeeper.getAllPPLSchemas();
-		phases=globalDataKeeper.getPhaseCollectors().get(0).getPhases();		
-		
-	}
-	
 	public TableConstructionPhases(GlobalManager globalManager){
 		
 		allPPLSchemas=globalManager.getTableManager().getAllPPLSchemas();
@@ -44,7 +35,7 @@ public class TableConstructionPhases implements PldConstruction {
 		
 	}
 	
-public String[] constructColumns(){
+	public String[] constructColumns(){
 		
 		ArrayList<String> columnsList=new ArrayList<String>();
 		
