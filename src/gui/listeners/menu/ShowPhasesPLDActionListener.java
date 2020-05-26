@@ -65,11 +65,12 @@ public class ShowPhasesPLDActionListener implements ActionListener {
 	            
 	            System.out.println(clusterManager.getTimeWeight()+" "+clusterManager.getChangeWeight());
 	            
-				PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),clusterManager);
+	            clusterManager.makePhases(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(), globalManager.getTableManager().getAllPPLTransitions());
+				//PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),clusterManager);
 
-				mainEngine.parseInput();		
-				System.out.println("\n\n\n");
-				mainEngine.extractPhases(clusterManager.getNumberOfPhases());
+				//mainEngine.parseInput();		
+				//System.out.println("\n\n\n");
+				//mainEngine.extractPhases(clusterManager.getNumberOfPhases());
 				/*try {
 					mainEngine.extractReportAssessment1();
 				} catch (IOException e) {
@@ -81,8 +82,8 @@ public class ShowPhasesPLDActionListener implements ActionListener {
 					e.printStackTrace();
 				}
 				*/
-				mainEngine.connectTransitionsWithPhases(globalManager.getTableManager().getAllPPLTransitions());
-				clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
+				//mainEngine.connectTransitionsWithPhases(globalManager.getTableManager().getAllPPLTransitions());
+				//clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
 				
 				
 				if(clusterManager.getPhaseCollectors().size()!=0){

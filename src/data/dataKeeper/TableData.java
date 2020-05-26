@@ -41,7 +41,6 @@ public class TableData {
 	private JvTable zoomAreaTable = null;
 	private JvTable LifeTimeTable = null;
 	
-	
 	public JvTable getZoomAreaTable() {
 		return zoomAreaTable;
 	}
@@ -54,6 +53,7 @@ public class TableData {
 	public void setLifeTimeTable(JvTable lifeTimeTable) {
 		LifeTimeTable = lifeTimeTable;
 	}
+	
 	public String[] getFirstLevelUndoColumnsZoomArea() {
 		return firstLevelUndoColumnsZoomArea;
 	}

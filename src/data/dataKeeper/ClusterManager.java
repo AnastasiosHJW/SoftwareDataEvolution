@@ -1,9 +1,15 @@
 package data.dataKeeper;
 
 import java.util.ArrayList;
+import java.util.TreeMap;
 
+import data.dataPPL.pplSQLSchema.PPLSchema;
+import data.dataPPL.pplSQLSchema.PPLTable;
+import data.dataPPL.pplTransition.PPLTransition;
 import phaseAnalyzer.commons.PhaseCollector;
+import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
 import tableClustering.clusterExtractor.commons.ClusterCollector;
+import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 
 public class ClusterManager {
 	
@@ -25,6 +31,25 @@ public class ClusterManager {
 	{
 		phaseCollectors = new ArrayList<PhaseCollector>();
 		clusterCollectors = new ArrayList<ClusterCollector>();
+	}
+	
+
+	
+	public void makePhases(String inputCsv, String outputAssessment1, String outputAssessment2, TreeMap<Integer, PPLTransition> allPPLTransitions)
+	{
+		PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,outputAssessment1,outputAssessment2, this);
+		mainEngine.parseInput();
+		mainEngine.extractPhases(numberOfPhases);
+		mainEngine.connectTransitionsWithPhases(allPPLTransitions);
+		phaseCollectors = mainEngine.getPhaseCollectors();
+	}
+	
+	public void makeClusters(TreeMap<String, PPLSchema> allPPLSchemas, TreeMap<String, PPLTable> allPPLTables, Double changeWeightP)
+	{
+		TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(allPPLSchemas, allPPLTables,birthWeight,deathWeight, changeWeightP);
+		mainEngine2.extractClusters(numberOfClusters);
+		clusterCollectors = mainEngine2.getClusterCollectors();
+		mainEngine2.print();
 	}
 
 	public Float getTimeWeight() {

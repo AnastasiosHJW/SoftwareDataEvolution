@@ -65,10 +65,10 @@ public class ShowPhasesWithClustersPLDActionListener implements ActionListener {
 	            
 	            System.out.println(clusterManager.getTimeWeight()+" "+clusterManager.getChangeWeight());
 	            
-	            PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),clusterManager);
-				mainEngine.parseInput();		
-				System.out.println("\n\n\n");
-				mainEngine.extractPhases(clusterManager.getNumberOfPhases());
+	            //PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),clusterManager);
+				//mainEngine.parseInput();		
+				//System.out.println("\n\n\n");
+				//mainEngine.extractPhases(clusterManager.getNumberOfPhases());
 				/*try {
 					mainEngine.extractReportAssessment1();
 				} catch (IOException e) {
@@ -80,12 +80,15 @@ public class ShowPhasesWithClustersPLDActionListener implements ActionListener {
 					e.printStackTrace();
 				}*/
 				
-				mainEngine.connectTransitionsWithPhases(globalManager.getTableManager().getAllPPLTransitions());
-				clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
-				TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalManager.getTableManager().getAllPPLSchemas(), globalManager.getTableManager().getAllPPLTables(),clusterManager.getBirthWeight(),clusterManager.getDeathWeight(),clusterManager.getChangeWeightCl());
-				mainEngine2.extractClusters(clusterManager.getNumberOfClusters());
-				clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
-				mainEngine2.print();
+				//mainEngine.connectTransitionsWithPhases(globalManager.getTableManager().getAllPPLTransitions());
+				//clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
+				clusterManager.makePhases(projectManager.getInputCsv(),projectManager.getOutputAssessment1(),projectManager.getOutputAssessment2(),globalManager.getTableManager().getAllPPLTransitions());
+	            
+	            //TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(globalManager.getTableManager().getAllPPLSchemas(), globalManager.getTableManager().getAllPPLTables(),clusterManager.getBirthWeight(),clusterManager.getDeathWeight(),clusterManager.getChangeWeightCl());
+				//mainEngine2.extractClusters(clusterManager.getNumberOfClusters());
+				//clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
+				//mainEngine2.print();
+				clusterManager.makeClusters(globalManager.getTableManager().getAllPPLSchemas(), globalManager.getTableManager().getAllPPLTables(), clusterManager.getChangeWeightCl());
 				
 				if(clusterManager.getPhaseCollectors().size()!=0){
 					TableConstructionWithClusters table=new TableConstructionWithClusters(globalManager.getClusterManager(), globalManager.getTableManager());

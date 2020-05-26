@@ -32,8 +32,6 @@ import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.tableConstructors.TableConstructionIDU;
 import gui.tableElements.tableConstructors.TableConstructionWithClusters;
-import phaseAnalyzer.engine.PhaseAnalyzerMainEngine;
-import tableClustering.clusterExtractor.engine.TableClusteringMainEngine;
 
 public class TableManager {
 	private TreeMap<String,PPLSchema> allPPLSchemas = null;
@@ -63,7 +61,6 @@ public class TableManager {
 		try {
 			w.work();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -181,22 +178,29 @@ public class TableManager {
         
         System.out.println(clusterManager.getTimeWeight()+" "+clusterManager.getChangeWeight());
         
-		PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,outputAssessment1,outputAssessment2, clusterManager);
+		//PhaseAnalyzerMainEngine mainEngine = new PhaseAnalyzerMainEngine(inputCsv,outputAssessment1,outputAssessment2, clusterManager);
 
-		Double b=new Double(0.3);
-		Double d=new Double(0.3);
-		Double c=new Double(0.3);
+		//Double b=new Double(0.3);
+		//Double d=new Double(0.3);
+		//Double c=new Double(0.3);
+        
+        clusterManager.setBirthWeight(0.3);
+		clusterManager.setDeathWeight(0.3);
+		clusterManager.setChangeWeight((float) 0.3);
 			
-		mainEngine.parseInput();		
-		System.out.println("\n\n\n");
-		mainEngine.extractPhases(clusterManager.getNumberOfPhases());
+		//mainEngine.parseInput();		
+		//System.out.println("\n\n\n");
+		//mainEngine.extractPhases(clusterManager.getNumberOfPhases());
+		//mainEngine.connectTransitionsWithPhases(allPPLTransitions);
+		//clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
+		clusterManager.makePhases(inputCsv,outputAssessment1,outputAssessment2, allPPLTransitions);
 		
-		mainEngine.connectTransitionsWithPhases(allPPLTransitions);
-		clusterManager.setPhaseCollectors(mainEngine.getPhaseCollectors());
-		TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(allPPLSchemas, allPPLTables,b,d,c);
-		mainEngine2.extractClusters(clusterManager.getNumberOfClusters());
-		clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
-		mainEngine2.print();
+		//TableClusteringMainEngine mainEngine2 = new TableClusteringMainEngine(allPPLSchemas, allPPLTables,b,d,c);
+		//mainEngine2.extractClusters(clusterManager.getNumberOfClusters());
+		//clusterManager.setClusterCollectors(mainEngine2.getClusterCollectors());
+		//mainEngine2.print();
+
+		clusterManager.makeClusters(allPPLSchemas, allPPLTables, 0.3);
 		
 		if(clusterManager.getPhaseCollectors().size()!=0){
 			TableConstructionWithClusters tableP=new TableConstructionWithClusters(clusterManager, this);
@@ -250,7 +254,6 @@ public class TableManager {
 			writer.write(testString);
 			writer.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

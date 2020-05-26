@@ -3,6 +3,7 @@ package gui.mainEngine;
 import gui.dialogs.CreateProjectJDialog;
 import gui.dialogs.EnlargeTable;
 import gui.listeners.menu.*;
+import gui.listeners.tables.UndoButtonMouseAdapter;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
 import gui.tableElements.commons.ShowDetailsComponents;
@@ -16,8 +17,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -61,8 +60,6 @@ public class Gui extends JFrame implements ActionListener{
 	private JScrollPane tmpScrollPane =new JScrollPane();
 	private JScrollPane treeScrollPane= new JScrollPane();
 	private JScrollPane tmpScrollPaneZoomArea =new JScrollPane();
-	
-	private ArrayList<Integer> selectedRows=new ArrayList<Integer>();
 
 	private String project=null;
 
@@ -311,6 +308,7 @@ public class Gui extends JFrame implements ActionListener{
 		undoButton = new JButton("Undo");
 		undoButton.setBounds(680, 560, 100, 30);
 		
+		/*
 		undoButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
@@ -323,7 +321,9 @@ public class Gui extends JFrame implements ActionListener{
 				
 			}
 		});
+		*/
 		
+		undoButton.addMouseListener(new UndoButtonMouseAdapter(tableData, showDetails, globalManager));
 		undoButton.setVisible(false);
 		
 		

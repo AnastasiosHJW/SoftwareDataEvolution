@@ -20,6 +20,7 @@ public class PhaseAnalyzerMainEngine {
 		
 		timeWeight=clusterManager.getTimeWeight();
 		changeWeight=clusterManager.getChangeWeight();
+		//this.changeWeight = changeWeight;
 		preProcessingTime=clusterManager.getPreProcessingTime();
 		preProcessingChange=clusterManager.getPreProcessingChange();
 		
