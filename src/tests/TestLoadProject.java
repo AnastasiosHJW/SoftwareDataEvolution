@@ -35,9 +35,7 @@ public class TestLoadProject {
 	{
 		projectName = new String[8];
 		
-		//String sourcePath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\filesHandler\\inis\\";
 		String sourcePath = ".\\filesHandler\\inis\\";
-		//String testPath = "C:\\Users\\Anastasios\\eclipse-workspace\\PlutarchParallelLives3\\TestData\\";
 		String testPath = ".\\TestData\\";
 		testFilename = testPath+ "LoadProject_";
 		

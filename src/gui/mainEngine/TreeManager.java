@@ -37,18 +37,18 @@ public class TreeManager {
 	
 	private ArrayList<String> selectedFromTree=new ArrayList<String>();
 	
-	private TableData tableData;
+	private TableUpdater tableUpdater;
 	
 
 	public TreeManager(JLabel treeLabel, JTree tablesTree, JPanel sideMenu, JPanel tablesTreePanel,
-			JScrollPane treeScrollPane, ArrayList<String> selectedFromTree, TableData tableData) {
+			JScrollPane treeScrollPane, ArrayList<String> selectedFromTree, TableUpdater tableUpdater) {
 		this.treeLabel = treeLabel;
 		this.tablesTree = tablesTree;
 		this.sideMenu = sideMenu;
 		this.tablesTreePanel = tablesTreePanel;
 		this.treeScrollPane = treeScrollPane;
 		this.selectedFromTree = selectedFromTree;
-		this.tableData = tableData;
+		this.tableUpdater = tableUpdater;
 	}
 
 	public void fillClustersTree(ClusterManager clusterManager){
@@ -80,7 +80,7 @@ public class TreeManager {
 					            @Override
 					            public void actionPerformed(ActionEvent e) {
 					          
-					            	tableData.getLifeTimeTable().repaint();
+					            	tableUpdater.getLifeTimeTable().repaint();
 					            	
 					            }
 					        });
@@ -136,7 +136,7 @@ public class TreeManager {
 							            @Override
 							            public void actionPerformed(ActionEvent e) {
 							          
-							            	tableData.getLifeTimeTable().repaint();
+							            	tableUpdater.getLifeTimeTable().repaint();
 							            	
 							            }
 							        });
@@ -192,7 +192,7 @@ public class TreeManager {
 					            @Override
 					            public void actionPerformed(ActionEvent e) {
 					          
-					                tableData.getLifeTimeTable().repaint();
+					                tableUpdater.getLifeTimeTable().repaint();
 					            	
 					            }
 					        });

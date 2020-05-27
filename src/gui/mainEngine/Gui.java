@@ -258,7 +258,7 @@ public class Gui extends JFrame implements ActionListener{
 			   public void mouseClicked(MouseEvent e) {
 				tableData.setRowHeight(tableData.getRowHeight()+2);
 				tableData.setColumnWidth(tableData.getColumnWidth()+1);
-				tableData.getZoomAreaTable().setZoom(tableData.getRowHeight(),tableData.getColumnWidth());
+				tableUpdater.getZoomAreaTable().setZoom(tableData.getRowHeight(),tableData.getColumnWidth());
 				
 			}
 		});
@@ -277,7 +277,7 @@ public class Gui extends JFrame implements ActionListener{
 				if (tableData.getColumnWidth()<1) {
 					tableData.setColumnWidth(1);
 				}
-				tableData.getZoomAreaTable().setZoom(tableData.getRowHeight(),tableData.getColumnWidth());
+				tableUpdater.getZoomAreaTable().setZoom(tableData.getRowHeight(),tableData.getColumnWidth());
 				
 			}
 		});
@@ -333,7 +333,7 @@ public class Gui extends JFrame implements ActionListener{
 		uniformlyDistributedButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-			    tableData.getLifeTimeTable().uniformlyDistributed(1);
+			    tableUpdater.getLifeTimeTable().uniformlyDistributed(1);
 			    
 			  } 
 		});
@@ -346,7 +346,7 @@ public class Gui extends JFrame implements ActionListener{
 		notUniformlyDistributedButton.addMouseListener(new MouseAdapter() {
 			@Override
 			   public void mouseClicked(MouseEvent e) {
-				tableData.getLifeTimeTable().notUniformlyDistributed(globalManager);
+				tableUpdater.getLifeTimeTable().notUniformlyDistributed(globalManager);
 			    
 			  } 
 		});
@@ -375,7 +375,7 @@ public class Gui extends JFrame implements ActionListener{
 				zoomModel, generalModel, descriptionText);
 		tableUpdater.setButtons(zoomInButton, zoomOutButton, uniformlyDistributedButton, notUniformlyDistributedButton, showThisToPopup, undoButton);
 		treeManager = new TreeManager(treeLabel, tablesTree, sideMenu, tablesTreePanel,
- treeScrollPane, tableData.getSelectedFromTree(),  tableData);
+ treeScrollPane, tableData.getSelectedFromTree(),  tableUpdater);
 		tableUpdater.setShowDetails(showDetails);
 		
 		
@@ -437,7 +437,7 @@ public class Gui extends JFrame implements ActionListener{
 		menuBar.add(mnTable);
 		
 		JMenuItem mntmShowLifetimeTable = new JMenuItem("Show Full Detailed LifeTime Table");
-		mntmShowLifetimeTable.addActionListener(new ShowLifetimeTableActionListener(tabbedPane, globalManager, tableData));
+		mntmShowLifetimeTable.addActionListener(new ShowLifetimeTableActionListener(tabbedPane, globalManager, tableData, tableUpdater));
 		mnFile.add(mntmShowLifetimeTable);
 		
 		JMenuItem mntmShowGeneralLifetimeIDU = new JMenuItem("Show PLD");

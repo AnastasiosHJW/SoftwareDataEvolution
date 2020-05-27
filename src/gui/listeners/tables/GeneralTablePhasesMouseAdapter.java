@@ -58,7 +58,7 @@ public class GeneralTablePhasesMouseAdapter extends MouseAdapter {
 	         
 	         tableData.setSelectedRowsFromMouse(target.getSelectedRows());
 	         tableData.setSelectedColumn(target.getSelectedColumn());
-	         tableData.getLifeTimeTable().repaint();
+	         generalTable.repaint();
 		}
 
 	   }
@@ -91,7 +91,7 @@ public class GeneralTablePhasesMouseAdapter extends MouseAdapter {
 		            public void actionPerformed(ActionEvent le) {
 		            	
 		            	tableData.setSelectedFromTree(new ArrayList<String>());
-		            	tableData.getLifeTimeTable().repaint();
+		            	generalTable.repaint();
 		            }
 		        });
 		        popupMenu.add(clearSelectionItem);
