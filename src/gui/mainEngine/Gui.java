@@ -116,6 +116,10 @@ public class Gui extends JFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public Gui() {
+		
+		globalManager = new GlobalManager();
+		tableData = new TableData();
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		setResizable(false);
@@ -368,8 +372,7 @@ public class Gui extends JFrame implements ActionListener{
 		
 		showDetails = new ShowDetailsComponents(descriptionText, tabbedPane, tmpScrollPaneZoomArea, zoomModel, zoomAreaTable, lifeTimePanel, undoButton);
 		
-		globalManager = new GlobalManager();
-		tableData = new TableData();
+		
 		
 		tableUpdater = new TableUpdater(tmpScrollPaneZoomArea,tmpScrollPane,lifeTimePanel,
 				zoomModel, generalModel, descriptionText);
