@@ -1,10 +1,13 @@
-package gui.tableElements.commons;
+package gui.mainEngine;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+
+import gui.tableElements.commons.JvTable;
+import gui.tableElements.commons.MyTableModel;
 
 public class ShowDetailsComponents {
 	

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import data.dataKeeper.ClusterManager;
 import data.dataKeeper.TableData;
 import data.dataKeeper.TableManager;
+import gui.mainEngine.ShowDetailsComponents;
 import gui.tableElements.commons.JvTable;
-import gui.tableElements.commons.ShowDetailsComponents;
 
 public class TableHeaderShowDetailsActionListener extends ShowDetailsActionListener implements ActionListener {
 

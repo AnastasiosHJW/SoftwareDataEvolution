@@ -21,9 +21,9 @@ import data.dataKeeper.ClusterManager;
 import data.dataKeeper.GlobalManager;
 import data.dataKeeper.TableData;
 import data.dataKeeper.TableManager;
+import gui.mainEngine.ShowDetailsComponents;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
-import gui.tableElements.commons.ShowDetailsComponents;
 import gui.tableElements.tableConstructors.TableConstructionZoomArea;
 
 public class UndoButtonMouseAdapter extends MouseAdapter {

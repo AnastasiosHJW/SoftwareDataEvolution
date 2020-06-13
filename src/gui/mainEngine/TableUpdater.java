@@ -32,7 +32,6 @@ import data.dataSorters.PldRowSorter;
 import gui.listeners.tables.*;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
-import gui.tableElements.commons.ShowDetailsComponents;
 import gui.tableElements.tableRenderers.GeneralTableIDUDefaultTableCellRenderer;
 import gui.tableElements.tableRenderers.GeneralTablePhasesDefaultTableCellRenderer;
 import gui.tableElements.tableRenderers.IDUHeaderTableRenderer;

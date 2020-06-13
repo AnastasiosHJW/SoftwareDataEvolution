@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import data.dataKeeper.ClusterManager;
 import data.dataKeeper.TableData;
 import data.dataKeeper.TableManager;
-import gui.tableElements.commons.ShowDetailsComponents;
+import gui.mainEngine.ShowDetailsComponents;
 
 public class TableShowDetailsActionListener extends ShowDetailsActionListener implements ActionListener {
 

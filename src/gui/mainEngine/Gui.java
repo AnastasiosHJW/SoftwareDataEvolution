@@ -6,7 +6,7 @@ import gui.listeners.menu.*;
 import gui.listeners.tables.UndoButtonMouseAdapter;
 import gui.tableElements.commons.JvTable;
 import gui.tableElements.commons.MyTableModel;
-import gui.tableElements.commons.ShowDetailsComponents;
+
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
